@@ -9,84 +9,109 @@
     body {
       font-family: 'Poppins', sans-serif;
     }
+    #loader {
+      position: fixed;
+      inset: 0;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    #loader img {
+      width: 100px;
+      margin-bottom: 1rem;
+    }
+    #main-content {
+      display: none;
+    }
   </style>
+  <script>
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("main-content").style.display = "block";
+      }, 3000);
+    });
+  </script>
 </head>
 <body class="bg-white text-gray-800">
 
-  <!-- Hero Banner Section -->
-  <section class="relative w-full h-[500px] sm:h-[600px]">
-    <img src="9f640f21-c115-4893-a45a-1e10b8546004.jpg" alt="Loan Banner" class="w-full h-full object-cover">
-    <div class="absolute inset-0 bg-blue-900 bg-opacity-80 flex flex-col justify-center items-center text-center text-white px-4">
-      <h1 class="text-2xl sm:text-4xl font-bold mb-3 leading-tight">Get Your First Loan in Just 6 Minutes</h1>
-      <p class="text-base sm:text-lg max-w-xl">Quick, reliable, and secure loans directly to your M-Pesa account</p>
-    </div>
-  </section>
+  <!-- Loader Screen -->
+  <div id="loader">
+    <img src="4b4591ce-dfa5-471f-a3fa-9aa69f073136.jpg" alt="ZashLoan Logo">
+    <p class="text-blue-900 font-semibold text-lg">Please wait... Contacting servers</p>
+  </div>
 
-  <!-- How to Borrow Money -->
-  <section class="py-12 px-6 bg-white">
-    <div class="max-w-4xl mx-auto">
-      <h2 class="text-2xl sm:text-3xl text-blue-900 font-bold mb-6 text-center">How to Borrow Money</h2>
-      <ul class="list-disc list-inside text-lg text-gray-700 space-y-3">
-        <li><span class="font-semibold text-blue-900">Register:</span> Create your ZashLoan account with your personal details.</li>
-        <li><span class="font-semibold text-blue-900">Submit:</span> Fill in your loan application form on the app or website.</li>
-        <li><span class="font-semibold text-blue-900">Wait:</span> Approval happens in under 6 minutes.</li>
-        <li><span class="font-semibold text-blue-900">Receive:</span> Funds are deposited to your M-Pesa account instantly.</li>
-      </ul>
-    </div>
-  </section>
+  <!-- Main Content -->
+  <div id="main-content">
 
-  <!-- Apply Button Section -->
-  <section class="text-center py-10 bg-gradient-to-r from-blue-900 to-blue-700 text-white">
-    <p class="text-xl mb-4 font-medium">Ready to get started?</p>
-    <a href="register.html" class="bg-yellow-400 text-blue-900 hover:bg-yellow-300 font-bold py-3 px-6 rounded-full text-lg shadow-md transition duration-300">
-      Apply for a Loan Now
-    </a>
-  </section>
+    <!-- Hero Section + How to Borrow -->
+    <section class="bg-white py-12 px-6 text-center">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl sm:text-4xl font-bold text-blue-900 mb-4">Get Your First Loan in Just 6 Minutes</h1>
+        <p class="text-lg sm:text-xl mb-8 text-gray-700">With ZashLoan, borrowing is fast, safe, and effortless.</p>
+        <h2 class="text-2xl sm:text-3xl text-blue-900 font-bold mb-6">How to Borrow Money</h2>
+        <ul class="list-disc list-inside text-left text-lg text-gray-700 space-y-3 mx-auto max-w-2xl">
+          <li><span class="font-semibold text-blue-900">Register</span> your ZashLoan account using your personal details.</li>
+          <li><span class="font-semibold text-blue-900">Submit</span> your loan request through the app.</li>
+          <li><span class="font-semibold text-blue-900">Wait</span> for fast approval in less than 6 minutes.</li>
+          <li><span class="font-semibold text-blue-900">Receive</span> money straight to your M-Pesa account.</li>
+        </ul>
+      </div>
+    </section>
 
-  <!-- Advantages Section -->
-  <section class="py-12 px-6 bg-white">
-    <div class="text-center mb-10">
-      <h2 class="text-2xl sm:text-3xl text-blue-900 font-bold">Why Choose ZashLoan?</h2>
-    </div>
-    <div class="grid gap-6 sm:grid-cols-3 max-w-5xl mx-auto">
-      <div class="p-6 border rounded-lg shadow hover:shadow-lg transition bg-gray-50">
-        <h3 class="text-xl font-semibold text-yellow-500 mb-2">Fast</h3>
-        <p>Get approved and funded in under 6 minutes.</p>
-      </div>
-      <div class="p-6 border rounded-lg shadow hover:shadow-lg transition bg-gray-50">
-        <h3 class="text-xl font-semibold text-yellow-500 mb-2">Secure</h3>
-        <p>Your data is protected using industry-grade encryption.</p>
-      </div>
-      <div class="p-6 border rounded-lg shadow hover:shadow-lg transition bg-gray-50">
-        <h3 class="text-xl font-semibold text-yellow-500 mb-2">Affordable</h3>
-        <p>Low processing fees with no hidden charges or penalties.</p>
-      </div>
-    </div>
-  </section>
+    <!-- Apply Button -->
+    <section class="text-center py-10 bg-gradient-to-r from-blue-900 to-blue-700 text-white">
+      <p class="text-xl mb-4 font-medium">Ready to get started?</p>
+      <a href="register.html" class="bg-yellow-400 text-blue-900 hover:bg-yellow-300 font-bold py-3 px-6 rounded-full text-lg shadow-lg transition duration-300">
+        Apply for a Loan Now
+      </a>
+    </section>
 
-  <!-- FAQ Section -->
-  <section class="py-12 px-6 bg-gray-50">
-    <h2 class="text-2xl sm:text-3xl text-blue-900 font-bold text-center mb-8">Frequently Asked Questions</h2>
-    <div class="max-w-3xl mx-auto space-y-6">
-      <div>
-        <h3 class="font-semibold text-blue-800">Who can apply?</h3>
-        <p class="text-gray-700">Anyone in Kenya over 18 years with a valid ID and M-Pesa line.</p>
+    <!-- Our Advantages -->
+    <section class="py-12 px-6 bg-white text-center">
+      <h2 class="text-2xl sm:text-3xl text-blue-900 font-bold mb-8">Why Choose ZashLoan?</h2>
+      <div class="grid sm:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div class="p-5 border rounded-lg shadow hover:shadow-lg transition">
+          <h3 class="text-xl font-semibold text-yellow-500 mb-2">Fast</h3>
+          <p>Get approved and funded in under 6 minutes.</p>
+        </div>
+        <div class="p-5 border rounded-lg shadow hover:shadow-lg transition">
+          <h3 class="text-xl font-semibold text-yellow-500 mb-2">Secure</h3>
+          <p>All your data is protected with end-to-end encryption.</p>
+        </div>
+        <div class="p-5 border rounded-lg shadow hover:shadow-lg transition">
+          <h3 class="text-xl font-semibold text-yellow-500 mb-2">Affordable</h3>
+          <p>Transparent processing fee of only 6.4%, no hidden charges.</p>
+        </div>
       </div>
-      <div>
-        <h3 class="font-semibold text-blue-800">How fast is it?</h3>
-        <p class="text-gray-700">Approval happens within minutes and payout is instant via M-Pesa.</p>
-      </div>
-      <div>
-        <h3 class="font-semibold text-blue-800">Is it safe?</h3>
-        <p class="text-gray-700">Yes. ZashLoan uses encrypted and secure systems to handle your data.</p>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Footer -->
-  <footer class="bg-blue-900 text-white text-center py-4 mt-6">
-    <p>&copy; 2025 ZashLoan. All rights reserved.</p>
-  </footer>
+    <!-- FAQ -->
+    <section class="py-12 px-6 bg-gray-50">
+      <h2 class="text-2xl sm:text-3xl text-blue-900 font-bold text-center mb-8">Frequently Asked Questions</h2>
+      <div class="max-w-3xl mx-auto space-y-6 text-left">
+        <div>
+          <h3 class="font-semibold text-blue-800">Who can apply?</h3>
+          <p>Anyone in Kenya over 18 years with a valid ID and M-Pesa line.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-blue-800">How fast is it?</h3>
+          <p>Once submitted, approval takes just minutes. Payout is instant.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-blue-800">Is it safe?</h3>
+          <p>Yes. ZashLoan uses secure systems to protect your personal data.</p>
+        </div>
+      </div>
+    </section>
 
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-white text-center py-4 mt-6">
+      <p>&copy; 2025 ZashLoan. All rights reserved.</p>
+    </footer>
+  </div>
 </body>
 </html>
