@@ -3,172 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Zash Loan - Loan Limit</title>
+  <title>Zash Loan Limit</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-    }
-  </style>
 </head>
-<body class="bg-white text-gray-800">
+<body class="bg-gradient-to-br from-red-700 via-red-500 to-red-300 min-h-screen text-white relative">
 
-  <!-- Loader Screen -->
-  <div id="loaderScreen" class="flex flex-col items-center justify-center min-h-screen bg-white p-4">
-    <img src="zash-logo.jpeg" alt="Zash Loan" class="w-16 h-16 mb-4">
-    <p class="text-lg font-medium text-gray-700 mb-2">Contacting server...</p>
-    <div class="w-full max-w-md bg-gray-200 rounded-full h-2">
-      <div id="progressBar" class="bg-red-500 h-2 rounded-full w-0 transition-all duration-500"></div>
+  <!-- Loader -->
+  <div id="loader" class="fixed inset-0 bg-red-900 flex flex-col items-center justify-center z-50 text-white">
+    <h2 class="text-xl font-semibold mb-2">Contacting Zash Loan Servers...</h2>
+    <div class="w-64 h-3 bg-red-300 rounded-full overflow-hidden mb-2">
+      <div id="progressBar" class="bg-white h-3 w-0 transition-all duration-300"></div>
     </div>
+    <p id="progressText" class="text-sm font-mono">0%</p>
   </div>
 
-  <!-- Main Loan Page -->
-  <div id="mainContent" class="hidden">
+  <!-- Main Page -->
+  <div id="mainPage" class="hidden min-h-screen flex flex-col items-center justify-start p-4 pt-6">
 
-    <!-- Header -->
-    <div class="flex items-center justify-between p-4 shadow-md bg-red-600 text-white">
-      <img src="zash-logo.jpeg" alt="Zash Loan" class="w-10 h-10">
-      <h1 class="text-lg font-semibold">Loan Application</h1>
+    <!-- Logo -->
+    <div class="w-full max-w-sm mb-4 flex items-center justify-start">
+      <img src="zash-logo.png" alt="Zash Logo" class="h-10 w-auto"/>
     </div>
 
-    <!-- Loan Limit Section -->
-    <div class="p-6 max-w-lg mx-auto">
-      <h2 class="text-lg font-semibold mb-2">Select Loan Amount</h2>
-      <input type="range" id="loanSlider" min="1500" max="15000" step="500"
-        class="w-full accent-red-600">
-      <p class="text-sm text-gray-600 mt-1">Loan Amount: <span id="loanAmount" class="font-bold text-red-600">KSH 1500</span></p>
+    <div class="bg-white text-red-900 max-w-sm w-full rounded-2xl shadow-lg p-6 text-center">
+      <h2 class="text-xl font-bold mb-2">Your Loan Limit</h2>
+      <p class="text-sm mb-4">Adjust your loan and due date below</p>
+
+      <!-- Loan Slider -->
+      <label class="block text-left font-medium text-sm mb-1">Loan Amount (Max: Ksh 15,000)</label>
+      <input type="range" min="1000" max="15000" step="500" value="5000" id="loanSlider" class="w-full accent-red-600 mb-1" oninput="updateLoan()">
+      <p class="text-sm">Selected: Ksh <span id="loanDisplay">5000</span></p>
+
+      <!-- Due Date Slider -->
+      <label class="block text-left font-medium text-sm mt-4 mb-1">Due Date (Days)</label>
+      <input type="range" min="5" max="15" value="10" id="daysSlider" class="w-full accent-red-600 mb-1" oninput="updateLoan()">
+      <p class="text-sm">Selected: <span id="dueDays">10</span> days</p>
+
+      <!-- Charges -->
+      <div class="text-left text-sm mt-4 bg-red-50 text-red-900 p-3 rounded-xl border border-red-200">
+        <p><strong>Interest (10%):</strong> Ksh <span id="interestAmount">500</span></p>
+        <p><strong>Service Fee (6.2%):</strong> Ksh <span id="serviceFee">310</span></p>
+        <p class="mt-2"><strong>Total to Repay:</strong> Ksh <span id="totalOwed">5810</span></p>
+      </div>
 
       <!-- Promo Code -->
-      <div class="mt-4">
-        <label class="block font-medium">Promo Code</label>
-        <div class="flex">
-          <input type="text" id="promoCode" placeholder="Enter code"
-            class="w-full border border-gray-300 px-3 py-2 rounded-l focus:outline-none">
-          <button onclick="applyPromo()"
-            class="bg-red-600 text-white px-4 rounded-r hover:bg-red-700">Apply</button>
-        </div>
-        <p id="promoMsg" class="text-sm text-green-600 mt-1 hidden">Promo applied!</p>
+      <div class="mt-4 flex gap-2">
+        <input type="text" id="promoCode" placeholder="Promo Code" class="flex-1 px-3 py-2 rounded-xl border border-red-300 text-sm">
+        <button onclick="applyPromo()" class="bg-red-600 text-white px-3 py-2 rounded-xl text-sm">Apply</button>
       </div>
 
-      <!-- M-Pesa Phone Number -->
-      <div class="mt-4">
-        <label class="block font-medium">Transfer to M-Pesa</label>
-        <input type="tel" id="mpesaNumber" placeholder="07XXXXXXXX"
-          class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none">
-      </div>
+      <!-- M-Pesa Number -->
+      <input type="tel" id="mpesaNumber" placeholder="Transfer to M-Pesa (07...)" class="w-full mt-3 px-3 py-2 rounded-xl border border-red-300 text-sm">
 
-      <!-- Loan Duration (Due in Days) -->
-      <div class="mt-4">
-        <label class="block font-medium">Loan Duration (Days)</label>
-        <input type="range" id="daysSlider" min="5" max="15" step="1"
-          class="w-full accent-red-600">
-        <p class="text-sm mt-1">Due in <span id="loanDays" class="font-semibold text-red-600">5</span> days</p>
-      </div>
-
-      <!-- Fees Breakdown -->
-      <div class="mt-6 border-t pt-4">
-        <h3 class="text-md font-semibold mb-2">Loan Summary</h3>
-        <div class="grid grid-cols-2 gap-2 text-sm">
-          <div>Loan Amount:</div><div id="summaryAmount">KSH 1500</div>
-          <div>Interest (10%):</div><div id="interest">KSH 150</div>
-          <div>Service Fee (6.2%):</div><div id="serviceFee">KSH 93</div>
-          <div class="font-bold">Total Owed:</div><div id="totalOwed" class="font-bold">KSH 1743</div>
-        </div>
-      </div>
-
-      <!-- Continue Button -->
-      <button onclick="submitLoan()"
-        class="mt-6 w-full bg-red-600 text-white py-2 rounded hover:bg-red-700">
-        Continue
+      <!-- Apply Button -->
+      <button onclick="proceedToVerification()" class="w-full mt-4 bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-semibold">
+        Apply Now
       </button>
     </div>
+
+    <!-- Footer -->
+    <footer class="mt-6 text-sm text-white text-center opacity-80">
+      © 2025 Zash Loan. All rights reserved.
+    </footer>
   </div>
 
   <script>
-    const loader = document.getElementById('loaderScreen');
-    const mainContent = document.getElementById('mainContent');
-    const progressBar = document.getElementById('progressBar');
+    let loanAmount = 5000;
+    let days = 10;
+    const interestRate = 0.10;
+    const serviceFeeRate = 0.062;
 
-    // Show loader first
-    let width = 0;
-    const loadingInterval = setInterval(() => {
-      width += 10;
-      progressBar.style.width = width + '%';
-      if (width >= 100) {
-        clearInterval(loadingInterval);
-        loader.classList.add('hidden');
-        mainContent.classList.remove('hidden');
-      }
-    }, 300);
+    function updateLoan() {
+      loanAmount = parseInt(document.getElementById('loanSlider').value);
+      days = parseInt(document.getElementById('daysSlider').value);
 
-    // Elements
-    const slider = document.getElementById('loanSlider');
-    const daysSlider = document.getElementById('daysSlider');
-    const loanAmountText = document.getElementById('loanAmount');
-    const summaryAmount = document.getElementById('summaryAmount');
-    const interestEl = document.getElementById('interest');
-    const serviceFeeEl = document.getElementById('serviceFee');
-    const totalOwedEl = document.getElementById('totalOwed');
-    const promoMsg = document.getElementById('promoMsg');
-    const loanDays = document.getElementById('loanDays');
+      const interest = Math.floor(loanAmount * interestRate);
+      const serviceFee = Math.floor(loanAmount * serviceFeeRate);
+      const total = loanAmount + interest + serviceFee;
 
-    function updateLoanDetails(value) {
-      const loan = parseInt(value);
-      const interest = Math.floor(loan * 0.10);
-      const serviceFee = Math.floor(loan * 0.062);
-      const total = loan + interest + serviceFee;
-
-      loanAmountText.textContent = `KSH ${loan}`;
-      summaryAmount.textContent = `KSH ${loan}`;
-      interestEl.textContent = `KSH ${interest}`;
-      serviceFeeEl.textContent = `KSH ${serviceFee}`;
-      totalOwedEl.textContent = `KSH ${total}`;
+      document.getElementById('loanDisplay').textContent = loanAmount.toLocaleString();
+      document.getElementById('dueDays').textContent = days;
+      document.getElementById('interestAmount').textContent = interest.toLocaleString();
+      document.getElementById('serviceFee').textContent = serviceFee.toLocaleString();
+      document.getElementById('totalOwed').textContent = total.toLocaleString();
     }
 
     function applyPromo() {
-      const promo = document.getElementById('promoCode').value.trim();
-      if (promo.toLowerCase() === 'zash2024') {
-        promoMsg.classList.remove('hidden');
-        promoMsg.textContent = "Promo applied! You got 100 off.";
-        // Apply 100 discount
-        const loan = parseInt(slider.value);
-        const interest = Math.floor(loan * 0.10);
-        const serviceFee = Math.floor(loan * 0.062);
-        const total = loan + interest + serviceFee - 100;
-
-        totalOwedEl.textContent = `KSH ${total}`;
-        localStorage.setItem('promoCode', promo);
+      const code = document.getElementById('promoCode').value.trim();
+      if (code.toLowerCase() === "zash50") {
+        alert("Promo code applied! You saved Ksh 50 on service fee.");
+      } else {
+        alert("Invalid promo code.");
       }
     }
 
-    function submitLoan() {
-      const loan = parseInt(slider.value);
-      const interest = Math.floor(loan * 0.10);
-      const serviceFee = Math.floor(loan * 0.062);
-      const total = loan + interest + serviceFee;
+    function proceedToVerification() {
+      const interest = Math.floor(loanAmount * interestRate);
+      const serviceFee = Math.floor(loanAmount * serviceFeeRate);
+      const total = loanAmount + interest + serviceFee;
+
       const mpesaNumber = document.getElementById('mpesaNumber').value;
-      const days = parseInt(daysSlider.value);
-      const promo = document.getElementById('promoCode').value.trim();
 
-      localStorage.setItem('loanAmount', loan);
-      localStorage.setItem('interest', interest);
-      localStorage.setItem('serviceFee', serviceFee);
-      localStorage.setItem('totalOwed', total);
-      localStorage.setItem('mpesaNumber', mpesaNumber);
-      localStorage.setItem('loanDays', days);
-      localStorage.setItem('promoCode', promo);
+      localStorage.setItem("loanAmount", loanAmount);
+      localStorage.setItem("interest", interest);
+      localStorage.setItem("serviceFee", serviceFee);
+      localStorage.setItem("totalOwed", total);
+      localStorage.setItem("dueDays", days);
+      localStorage.setItem("mpesaNumber", mpesaNumber);
+      localStorage.setItem("promoCode", document.getElementById('promoCode').value);
 
-      window.location.href = 'verification.html';
+      window.location.href = "verification.html";
     }
 
-    slider.addEventListener('input', () => updateLoanDetails(slider.value));
-    daysSlider.addEventListener('input', () => {
-      loanDays.textContent = daysSlider.value;
-    });
+    // Simulate loading
+    let progress = 0;
+    const progressText = document.getElementById("progressText");
+    const progressBar = document.getElementById("progressBar");
+    const loader = document.getElementById("loader");
+    const mainPage = document.getElementById("mainPage");
 
-    // Init on load
-    updateLoanDetails(slider.value);
-    loanDays.textContent = daysSlider.value;
+    const interval = setInterval(() => {
+      if (progress < 100) {
+        progress++;
+        progressText.textContent = `${progress}%`;
+        progressBar.style.width = `${progress}%`;
+      } else {
+        clearInterval(interval);
+        loader.classList.add("hidden");
+        mainPage.classList.remove("hidden");
+        updateLoan();
+      }
+    }, 30);
   </script>
+
 </body>
 </html>
