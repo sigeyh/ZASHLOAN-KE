@@ -3,72 +3,83 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ZashLoan - Register</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-    }
-  </style>
+  <title>Zash Loan - Register</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-blue-50 flex items-center justify-center min-h-screen px-4">
+<body class="bg-white text-gray-800 font-sans">
 
-  <!-- Main Card -->
-  <div class="bg-white w-full max-w-md p-6 rounded-lg shadow-md">
-    <div class="flex items-center mb-6">
-      <img src="zashlogo.jpeg" alt="ZashLoan Logo" class="w-10 h-10 mr-2">
-      <h2 class="text-2xl font-bold text-blue-900">ZashLoan Registration</h2>
-    </div>
-
-    <!-- Form -->
-    <form id="registerForm" class="space-y-4">
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Full Name</label>
-        <input type="text" id="username" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400">
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Phone Number</label>
-        <input type="tel" id="phone" required class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400">
-      </div>
-      <button type="submit" class="w-full bg-yellow-400 hover:bg-yellow-300 text-blue-900 font-semibold py-3 rounded-full">Continue</button>
-    </form>
+  <!-- Header -->
+  <div class="p-4 text-center shadow-md">
+    <img src="zash-logo.jpeg" alt="Zash Loan" class="w-12 mx-auto mb-2">
+    <h1 class="text-xl font-semibold">Get loan online within 15 minutes</h1>
+    <p class="text-gray-600">Fast and safe apply</p>
   </div>
 
-  <!-- Popup Modal -->
-  <div id="popup" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
-    <div class="bg-white w-full max-w-sm p-6 rounded-lg text-center space-y-4">
-      <p class="text-lg font-semibold text-gray-800">Is your phone number:</p>
-      <p id="popupPhone" class="text-xl text-blue-800 font-bold"></p>
-      <button onclick="confirmNumber()" class="w-full bg-blue-900 text-white py-2 rounded-full">Yes, Confirm</button>
-      <button onclick="changeNumber()" class="w-full mt-2 bg-gray-200 text-blue-700 py-2 rounded-full">Change Number</button>
+  <!-- Form -->
+  <div class="p-6 max-w-md mx-auto mt-4">
+    <p class="text-center mb-4 text-sm text-gray-600">To apply for a loan, enter your phone number</p>
+    <label class="block mb-2 font-medium">Phone number</label>
+    <div class="flex mb-4">
+      <span class="bg-gray-200 border border-gray-300 rounded-l px-4 py-2">+254</span>
+      <input id="phoneNumber" type="tel" maxlength="9" placeholder="7XXXXXXXX"
+        class="w-full border border-gray-300 rounded-r px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
+    </div>
+
+    <button onclick="showConfirmPopup()" class="bg-red-500 text-white w-full py-2 rounded hover:bg-red-600">Continue</button>
+
+    <p class="text-xs text-center text-gray-500 mt-4">
+      By clicking on the "Continue" button, I confirm that I have read and accept the
+      <a href="#" class="text-blue-600 underline">Terms & Conditions</a> and
+      <a href="#" class="text-blue-600 underline">Privacy Policy</a>, and that the specified phone number is mine
+      and the M-Pesa account is connected to it.
+    </p>
+  </div>
+
+  <!-- Confirmation Popup -->
+  <div id="confirmPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white p-6 rounded shadow-lg text-center w-[90%] max-w-sm">
+      <h2 class="text-lg font-semibold mb-2">Is this your phone number?</h2>
+      <p id="displayPhone" class="text-xl text-gray-800 font-bold mb-4"></p>
+      <button onclick="goToSignup()" class="bg-red-500 text-white px-4 py-2 rounded w-full mb-2 hover:bg-red-600">Confirm</button>
+      <button onclick="changeNumber()" class="text-red-500 underline text-sm">Change number</button>
     </div>
   </div>
 
+  <!-- Footer -->
+  <div class="bg-red-100 text-gray-800 p-4 mt-10 text-sm">
+    <div class="max-w-md mx-auto">
+      <p class="mb-2"><strong>Support service:</strong> 0709-209-000 (Mon–Sun: 8AM–6PM)</p>
+      <p class="mb-2"><strong>Email:</strong> support@zashloan.co.ke</p>
+      <p><strong>Application acceptance:</strong> 24/7</p>
+      <div class="mt-4 flex gap-4 justify-center text-lg text-red-600">
+        <i class="fab fa-facebook"></i>
+        <i class="fab fa-instagram"></i>
+        <i class="fab fa-linkedin"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS -->
   <script>
-    const form = document.getElementById('registerForm');
-    const popup = document.getElementById('popup');
-    const popupPhone = document.getElementById('popupPhone');
+    function showConfirmPopup() {
+      const phone = document.getElementById("phoneNumber").value.trim();
+      if (phone.length === 9 && phone.startsWith("7")) {
+        const fullNumber = "+254" + phone;
+        localStorage.setItem("zashPhone", fullNumber);
+        document.getElementById("displayPhone").innerText = fullNumber;
+        document.getElementById("confirmPopup").classList.remove("hidden");
+        document.getElementById("confirmPopup").classList.add("flex");
+      } else {
+        alert("Please enter a valid 9-digit Kenyan phone number starting with 7");
+      }
+    }
 
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const name = document.getElementById('username').value;
-      const phone = document.getElementById('phone').value;
-
-      // Save to localStorage
-      localStorage.setItem('zash_username', name);
-      localStorage.setItem('zash_phone', phone);
-
-      // Show phone in popup
-      popupPhone.textContent = phone;
-      popup.classList.remove('hidden');
-    });
-
-    function confirmNumber() {
-      window.location.href = 'signup.html';
+    function goToSignup() {
+      window.location.href = "signup.html";
     }
 
     function changeNumber() {
-      window.location.href = 'register.html';
+      window.location.href = "register.html";
     }
   </script>
 </body>
