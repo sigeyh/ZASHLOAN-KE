@@ -82,6 +82,11 @@
         Continue
       </button>
     </div>
+
+    <!-- Footer -->
+    <footer class="mt-10 py-4 bg-red-600 text-white text-center text-sm">
+      © 2025 Zash Loan. All rights reserved.
+    </footer>
   </div>
 
   <script>
@@ -130,7 +135,6 @@
       if (promo.toLowerCase() === 'zash2024') {
         promoMsg.classList.remove('hidden');
         promoMsg.textContent = "Promo applied! You got 100 off.";
-        // Apply 100 discount
         const loan = parseInt(slider.value);
         const interest = Math.floor(loan * 0.10);
         const serviceFee = Math.floor(loan * 0.062);
