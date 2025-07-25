@@ -6,61 +6,64 @@
   <title>Zash Loan - Payment Verification</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-red-900 via-red-700 to-red-500 min-h-screen flex items-center justify-center p-4 text-red-900">
+<body class="bg-gradient-to-br from-red-900 via-red-700 to-red-500 min-h-screen text-red-900 flex flex-col justify-between">
 
-  <div class="bg-white/90 backdrop-blur-md max-w-md w-full rounded-2xl shadow-2xl p-6 relative">
-    
-    <!-- Header -->
-    <div class="flex items-center gap-3 mb-4">
-      <img src="logo.png" alt="Zash Loan Logo" class="h-10 w-10">
-      <div>
-        <h1 class="text-xl font-bold text-red-800">Zash Loan</h1>
-        <p class="text-sm text-gray-700">Loan Payment Confirmation</p>
+  <!-- Main Container -->
+  <main class="flex-grow flex items-center justify-center px-4 py-6">
+    <div class="bg-white/90 backdrop-blur-md w-full max-w-md rounded-2xl shadow-2xl p-6">
+
+      <!-- Header -->
+      <div class="flex items-center gap-3 mb-4">
+        <img src="logo.png" alt="Zash Loan Logo" class="h-10 w-10">
+        <div>
+          <h1 class="text-xl font-bold text-red-800">Zash Loan</h1>
+          <p class="text-sm text-gray-700">Loan Payment Confirmation</p>
+        </div>
       </div>
+
+      <!-- Loan Summary -->
+      <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-sm mb-5">
+        <p><strong>Name:</strong> <span id="borrowerName">Loading...</span></p>
+        <p><strong>Loan Amount:</strong> Ksh <span id="loanAmount">...</span></p>
+        <p><strong>Service Fee (6.2%):</strong> Ksh <span id="serviceFee">...</span></p>
+      </div>
+
+      <!-- Payment Instructions -->
+      <div class="bg-red-100 p-4 rounded-xl mb-5 text-sm text-gray-800">
+        <p class="font-semibold mb-2">Pay via M-PESA:</p>
+        <ul class="list-disc list-inside space-y-1">
+          <li>Open <strong>M-PESA</strong></li>
+          <li>Select <strong>Buy Goods and Services</strong></li>
+          <li>
+            Till Number: 
+            <strong id="tillNumber">9824375</strong>
+            <button onclick="copyTill()" class="ml-2 text-xs text-red-600 underline">Copy</button>
+          </li>
+          <li>Amount: <strong id="amountToPay">Ksh ...</strong></li>
+          <li>Business Name: <strong>ZASH PROVISION</strong></li>
+        </ul>
+      </div>
+
+      <!-- Message input -->
+      <label for="mpesaMessage" class="block text-sm font-medium text-gray-800 mb-1">Paste M-PESA Confirmation Message:</label>
+      <textarea id="mpesaMessage" rows="3" placeholder="e.g. QFG45*** Confirmed. Ksh 930.00 sent to ZASH PROVISION..."
+        class="w-full p-3 border border-red-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 text-sm mb-4"></textarea>
+
+      <!-- Buttons -->
+      <div class="flex flex-col gap-3">
+        <button onclick="verifyPayment()" class="bg-red-700 hover:bg-red-800 text-white font-semibold py-3 rounded-xl">
+          Verify Payment
+        </button>
+        <button onclick="window.location.href='checklimit.html'"
+          class="bg-gray-100 hover:bg-gray-200 text-red-700 font-medium py-2 rounded-xl">
+          Edit Loan Details
+        </button>
+      </div>
+
+      <!-- Status Message -->
+      <p id="status" class="text-center mt-4 text-sm text-red-600 hidden">❌ Verification failed. Please check your message.</p>
     </div>
-
-    <!-- Loan Summary -->
-    <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-sm mb-5">
-      <p><strong>Name:</strong> <span id="borrowerName">Loading...</span></p>
-      <p><strong>Loan Amount:</strong> Ksh <span id="loanAmount">...</span></p>
-      <p><strong>Service Fee (6.2%):</strong> Ksh <span id="serviceFee">...</span></p>
-    </div>
-
-    <!-- Payment Instructions -->
-    <div class="bg-red-100 p-4 rounded-xl mb-5 text-sm text-gray-800">
-      <p class="font-semibold mb-2">Pay via M-PESA:</p>
-      <ul class="list-disc list-inside space-y-1">
-        <li>Open <strong>M-PESA</strong></li>
-        <li>Select <strong>Buy Goods and Services</strong></li>
-        <li>
-          Till Number: 
-          <strong id="tillNumber">9824375</strong>
-          <button onclick="copyTill()" class="ml-2 text-xs text-red-600 underline">Copy</button>
-        </li>
-        <li>Amount: <strong id="amountToPay">Ksh ...</strong></li>
-        <li>Business Name: <strong>ZASH PROVISION</strong></li>
-      </ul>
-    </div>
-
-    <!-- Message input -->
-    <label for="mpesaMessage" class="block text-sm font-medium text-gray-800 mb-1">Paste M-PESA Confirmation Message:</label>
-    <textarea id="mpesaMessage" rows="3" placeholder="e.g. QFG45*** Confirmed. Ksh 930.00 sent to ZASH PROVISION..."
-      class="w-full p-3 border border-red-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 text-sm mb-4"></textarea>
-
-    <!-- Buttons -->
-    <div class="flex flex-col gap-3">
-      <button onclick="verifyPayment()" class="bg-red-700 hover:bg-red-800 text-white font-semibold py-3 rounded-xl">
-        Verify Payment
-      </button>
-      <button onclick="window.location.href='checklimit.html'"
-        class="bg-gray-100 hover:bg-gray-200 text-red-700 font-medium py-2 rounded-xl">
-        Edit Loan Details
-      </button>
-    </div>
-
-    <!-- Status Message -->
-    <p id="status" class="text-center mt-4 text-sm text-red-600 hidden">❌ Verification failed. Please check your message.</p>
-  </div>
+  </main>
 
   <!-- ✅ Success Popup -->
   <div id="popupOverlay" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
@@ -72,7 +75,7 @@
   </div>
 
   <!-- Footer -->
-  <footer class="absolute bottom-2 text-xs text-white text-center w-full">
+  <footer class="text-center text-white text-xs py-3">
     © 2025 Zash Loan. All rights reserved.
   </footer>
 
