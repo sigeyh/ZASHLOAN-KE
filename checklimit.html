@@ -13,80 +13,104 @@
 </head>
 <body class="bg-white text-gray-800">
 
-  <!-- Header -->
-  <div class="flex items-center justify-between p-4 shadow-md bg-red-600 text-white">
-    <img src="zash-logo.jpeg" alt="Zash Loan" class="w-10 h-10">
-    <h1 class="text-lg font-semibold">Loan Application</h1>
-  </div>
-
-  <!-- Loader -->
-  <div class="p-4 text-center">
-    <p class="text-gray-700 text-sm">Contacting server...</p>
-    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+  <!-- Loader Screen -->
+  <div id="loaderScreen" class="flex flex-col items-center justify-center min-h-screen bg-white p-4">
+    <img src="zash-logo.jpeg" alt="Zash Loan" class="w-16 h-16 mb-4">
+    <p class="text-lg font-medium text-gray-700 mb-2">Contacting server...</p>
+    <div class="w-full max-w-md bg-gray-200 rounded-full h-2">
       <div id="progressBar" class="bg-red-500 h-2 rounded-full w-0 transition-all duration-500"></div>
     </div>
   </div>
 
-  <!-- Loan Limit Section -->
-  <div class="p-6 max-w-lg mx-auto">
-    <h2 class="text-lg font-semibold mb-2">Select Loan Amount</h2>
-    <input type="range" id="loanSlider" min="1500" max="5000" step="100"
-      class="w-full accent-red-600">
-    <p class="text-sm text-gray-600 mt-1">Loan Amount: <span id="loanAmount" class="font-bold text-red-600">KSH 1500</span></p>
+  <!-- Main Loan Page -->
+  <div id="mainContent" class="hidden">
 
-    <!-- Promo Code -->
-    <div class="mt-4">
-      <label class="block font-medium">Promo Code</label>
-      <div class="flex">
-        <input type="text" id="promoCode" placeholder="Enter code"
-          class="w-full border border-gray-300 px-3 py-2 rounded-l focus:outline-none">
-        <button onclick="applyPromo()"
-          class="bg-red-600 text-white px-4 rounded-r hover:bg-red-700">Apply</button>
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 shadow-md bg-red-600 text-white">
+      <img src="zash-logo.jpeg" alt="Zash Loan" class="w-10 h-10">
+      <h1 class="text-lg font-semibold">Loan Application</h1>
+    </div>
+
+    <!-- Loan Limit Section -->
+    <div class="p-6 max-w-lg mx-auto">
+      <h2 class="text-lg font-semibold mb-2">Select Loan Amount</h2>
+      <input type="range" id="loanSlider" min="1500" max="15000" step="500"
+        class="w-full accent-red-600">
+      <p class="text-sm text-gray-600 mt-1">Loan Amount: <span id="loanAmount" class="font-bold text-red-600">KSH 1500</span></p>
+
+      <!-- Promo Code -->
+      <div class="mt-4">
+        <label class="block font-medium">Promo Code</label>
+        <div class="flex">
+          <input type="text" id="promoCode" placeholder="Enter code"
+            class="w-full border border-gray-300 px-3 py-2 rounded-l focus:outline-none">
+          <button onclick="applyPromo()"
+            class="bg-red-600 text-white px-4 rounded-r hover:bg-red-700">Apply</button>
+        </div>
+        <p id="promoMsg" class="text-sm text-green-600 mt-1 hidden">Promo applied!</p>
       </div>
-      <p id="promoMsg" class="text-sm text-green-600 mt-1 hidden">Promo applied!</p>
-    </div>
 
-    <!-- M-Pesa Phone Number -->
-    <div class="mt-4">
-      <label class="block font-medium">Transfer to M-Pesa</label>
-      <input type="tel" id="mpesaNumber" placeholder="07XXXXXXXX"
-        class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none">
-    </div>
-
-    <!-- Due Date -->
-    <div class="mt-4">
-      <label class="block font-medium">Loan Due Date</label>
-      <input type="date" id="dueDate"
-        class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none">
-    </div>
-
-    <!-- Fees Breakdown -->
-    <div class="mt-6 border-t pt-4">
-      <h3 class="text-md font-semibold mb-2">Loan Summary</h3>
-      <div class="grid grid-cols-2 gap-2 text-sm">
-        <div>Loan Amount:</div><div id="summaryAmount">KSH 1500</div>
-        <div>Interest (10%):</div><div id="interest">KSH 150</div>
-        <div>Service Fee (6.2%):</div><div id="serviceFee">KSH 93</div>
-        <div class="font-bold">Total Owed:</div><div id="totalOwed" class="font-bold">KSH 1743</div>
+      <!-- M-Pesa Phone Number -->
+      <div class="mt-4">
+        <label class="block font-medium">Transfer to M-Pesa</label>
+        <input type="tel" id="mpesaNumber" placeholder="07XXXXXXXX"
+          class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none">
       </div>
-    </div>
 
-    <!-- Continue Button -->
-    <button onclick="submitLoan()"
-      class="mt-6 w-full bg-red-600 text-white py-2 rounded hover:bg-red-700">
-      Continue
-    </button>
+      <!-- Loan Duration (Due in Days) -->
+      <div class="mt-4">
+        <label class="block font-medium">Loan Duration (Days)</label>
+        <input type="range" id="daysSlider" min="5" max="15" step="1"
+          class="w-full accent-red-600">
+        <p class="text-sm mt-1">Due in <span id="loanDays" class="font-semibold text-red-600">5</span> days</p>
+      </div>
+
+      <!-- Fees Breakdown -->
+      <div class="mt-6 border-t pt-4">
+        <h3 class="text-md font-semibold mb-2">Loan Summary</h3>
+        <div class="grid grid-cols-2 gap-2 text-sm">
+          <div>Loan Amount:</div><div id="summaryAmount">KSH 1500</div>
+          <div>Interest (10%):</div><div id="interest">KSH 150</div>
+          <div>Service Fee (6.2%):</div><div id="serviceFee">KSH 93</div>
+          <div class="font-bold">Total Owed:</div><div id="totalOwed" class="font-bold">KSH 1743</div>
+        </div>
+      </div>
+
+      <!-- Continue Button -->
+      <button onclick="submitLoan()"
+        class="mt-6 w-full bg-red-600 text-white py-2 rounded hover:bg-red-700">
+        Continue
+      </button>
+    </div>
   </div>
 
   <script>
+    const loader = document.getElementById('loaderScreen');
+    const mainContent = document.getElementById('mainContent');
+    const progressBar = document.getElementById('progressBar');
+
+    // Show loader first
+    let width = 0;
+    const loadingInterval = setInterval(() => {
+      width += 10;
+      progressBar.style.width = width + '%';
+      if (width >= 100) {
+        clearInterval(loadingInterval);
+        loader.classList.add('hidden');
+        mainContent.classList.remove('hidden');
+      }
+    }, 300);
+
+    // Elements
     const slider = document.getElementById('loanSlider');
+    const daysSlider = document.getElementById('daysSlider');
     const loanAmountText = document.getElementById('loanAmount');
     const summaryAmount = document.getElementById('summaryAmount');
     const interestEl = document.getElementById('interest');
     const serviceFeeEl = document.getElementById('serviceFee');
     const totalOwedEl = document.getElementById('totalOwed');
-    const progressBar = document.getElementById('progressBar');
     const promoMsg = document.getElementById('promoMsg');
+    const loanDays = document.getElementById('loanDays');
 
     function updateLoanDetails(value) {
       const loan = parseInt(value);
@@ -123,7 +147,7 @@
       const serviceFee = Math.floor(loan * 0.062);
       const total = loan + interest + serviceFee;
       const mpesaNumber = document.getElementById('mpesaNumber').value;
-      const dueDate = document.getElementById('dueDate').value;
+      const days = parseInt(daysSlider.value);
       const promo = document.getElementById('promoCode').value.trim();
 
       localStorage.setItem('loanAmount', loan);
@@ -131,24 +155,20 @@
       localStorage.setItem('serviceFee', serviceFee);
       localStorage.setItem('totalOwed', total);
       localStorage.setItem('mpesaNumber', mpesaNumber);
-      localStorage.setItem('dueDate', dueDate);
+      localStorage.setItem('loanDays', days);
       localStorage.setItem('promoCode', promo);
 
       window.location.href = 'verification.html';
     }
 
     slider.addEventListener('input', () => updateLoanDetails(slider.value));
+    daysSlider.addEventListener('input', () => {
+      loanDays.textContent = daysSlider.value;
+    });
 
-    // Simulate loader
-    let width = 0;
-    const loadingInterval = setInterval(() => {
-      width += 10;
-      progressBar.style.width = width + '%';
-      if (width >= 100) clearInterval(loadingInterval);
-    }, 300);
-
-    // Initialize with default value
+    // Init on load
     updateLoanDetails(slider.value);
+    loanDays.textContent = daysSlider.value;
   </script>
 </body>
 </html>
