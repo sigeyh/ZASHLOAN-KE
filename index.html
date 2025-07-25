@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ZashLoan - Instant Mobile Loans Kenya</title>
+  <title>Zash Loan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
@@ -12,77 +12,45 @@
     }
   </style>
 </head>
+<body class="bg-gradient-to-b from-red-700 via-red-500 to-red-400 text-white min-h-screen">
 
-<body class="bg-gray-50">
-  <!-- Header -->
-  <header class="bg-white shadow-md py-4">
-    <div class="container mx-auto px-6 flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-blue-900">ZashLoan</h1>
-      <a href="register.html" class="bg-blue-900 text-white py-2 px-4 rounded hover:bg-blue-800">Login</a>
-    </div>
-  </header>
+<!-- Loading Screen -->
+<div id="loadingScreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom right, #e60000, #ff4d4d); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+  <div style="text-align: center; color: white;">
+    <img src="4b4591ce-dfa5-471f-a3fa-9aa69f073136.jpg" alt="Zash Loan Logo" style="width: 120px; height: 120px; border-radius: 20px; margin-bottom: 20px;">
+    <h2>Loading Zash Loan...</h2>
+  </div>
+</div>
 
-  <!-- Combined Hero + How to Borrow Section -->
-  <section class="bg-blue-900 text-white py-12 px-6 text-center">
-    <div class="max-w-4xl mx-auto">
-      <h1 class="text-3xl sm:text-4xl font-bold mb-4">Get Your First Loan in Just 6 Minutes</h1>
-      <p class="text-lg mb-6">Fast, secure, and direct to your M-Pesa — here's how:</p>
+<div class="container mx-auto px-4 py-6">
+  <div class="text-center mb-6">
+    <img src="4b4591ce-dfa5-471f-a3fa-9aa69f073136.jpg" alt="Zash Loan Logo" class="mx-auto w-24 h-24 rounded-full">
+    <h1 class="text-3xl font-bold mt-2">Zash Loan</h1>
+  </div>
 
-      <ul class="text-left list-disc list-inside text-white space-y-3 mb-6">
-        <li><span class="font-semibold text-yellow-300">Register</span> your ZashLoan account using your personal details.</li>
-        <li><span class="font-semibold text-yellow-300">Submit</span> your loan request through the app.</li>
-        <li><span class="font-semibold text-yellow-300">Wait</span> for fast approval in less than 6 minutes.</li>
-        <li><span class="font-semibold text-yellow-300">Receive</span> money straight to your M-Pesa account.</li>
-      </ul>
+  <div class="bg-white text-red-800 rounded-xl p-4 mb-6">
+    <h2 class="text-xl font-semibold mb-2">Get Loan Online in 6 Minutes</h2>
+    <ul class="list-disc pl-5 space-y-1">
+      <li>Download Zash Loan app</li>
+      <li>Create an account</li>
+      <li>Fill in your loan application</li>
+      <li>Submit required details</li>
+      <li>Get approved and receive cash</li>
+    </ul>
+  </div>
 
-      <a href="register.html" class="bg-yellow-400 text-blue-900 hover:bg-yellow-300 font-bold py-3 px-6 rounded-full text-lg shadow-md transition duration-300">
-        Apply for a Loan Now
-      </a>
-    </div>
-  </section>
+  <div class="text-center">
+    <a href="#" class="bg-white text-red-700 font-bold py-2 px-6 rounded-full shadow hover:bg-gray-100">Apply Now</a>
+  </div>
+</div>
 
-  <!-- Eligibility Section -->
-  <section class="py-12 bg-white text-center">
-    <div class="container mx-auto px-6">
-      <h2 class="text-2xl font-semibold text-blue-900 mb-4">Who Can Apply?</h2>
-      <p class="mb-4">You qualify for a ZashLoan if you:</p>
-      <ul class="list-disc list-inside max-w-xl mx-auto text-left text-gray-700">
-        <li>Are a Kenyan citizen aged 18 and above</li>
-        <li>Own a mobile phone with M-Pesa access</li>
-        <li>Have a valid national ID</li>
-      </ul>
-    </div>
-  </section>
+<script>
+  window.addEventListener("load", function () {
+    setTimeout(() => {
+      document.getElementById("loadingScreen").style.display = "none";
+    }, 3000);
+  });
+</script>
 
-  <!-- FAQs -->
-  <section class="py-12 bg-gray-100">
-    <div class="container mx-auto px-6">
-      <h2 class="text-2xl font-semibold text-blue-900 text-center mb-6">Frequently Asked Questions</h2>
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="bg-white p-4 rounded shadow">
-          <h3 class="font-bold text-blue-800">How much can I borrow?</h3>
-          <p>You can borrow from Ksh 500 to Ksh 50,000 depending on your limit.</p>
-        </div>
-        <div class="bg-white p-4 rounded shadow">
-          <h3 class="font-bold text-blue-800">How long does it take?</h3>
-          <p>Loan approval takes under 6 minutes once you register and apply.</p>
-        </div>
-        <div class="bg-white p-4 rounded shadow">
-          <h3 class="font-bold text-blue-800">Where does the money go?</h3>
-          <p>The funds are deposited directly into your M-Pesa account.</p>
-        </div>
-        <div class="bg-white p-4 rounded shadow">
-          <h3 class="font-bold text-blue-800">Do I need security?</h3>
-          <p>No. Our loans are unsecured – no collateral required.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-blue-900 text-white py-6 mt-12 text-center">
-    <p>&copy; 2025 ZashLoan. All rights reserved.</p>
-  </footer>
 </body>
-
 </html>
