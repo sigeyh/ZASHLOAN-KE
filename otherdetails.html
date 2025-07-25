@@ -97,29 +97,41 @@
 
     <!-- Questionnaire -->
     <div class="pt-4 border-t border-gray-200">
-      <label class="block font-medium mb-1">Do you have children under 18?</label>
-      <select class="w-full border border-gray-300 px-4 py-2 rounded">
-        <option>Yes</option>
-        <option>No</option>
-      </select>
+      <p class="font-medium mb-2">Additional Information</p>
 
-      <label class="block font-medium mt-4 mb-1">Do you currently have outstanding debt?</label>
-      <select class="w-full border border-gray-300 px-4 py-2 rounded">
-        <option>Yes</option>
-        <option>No</option>
-      </select>
+      <div class="space-y-3">
+        <div>
+          <p>Do you have children under 18?</p>
+          <div class="flex gap-4 mt-1">
+            <label><input type="radio" name="children" value="Yes"> Yes</label>
+            <label><input type="radio" name="children" value="No"> No</label>
+          </div>
+        </div>
 
-      <label class="block font-medium mt-4 mb-1">Do you have an active loan?</label>
-      <select class="w-full border border-gray-300 px-4 py-2 rounded">
-        <option>Yes</option>
-        <option>No</option>
-      </select>
+        <div>
+          <p>Do you currently have outstanding debt?</p>
+          <div class="flex gap-4 mt-1">
+            <label><input type="radio" name="debt" value="Yes"> Yes</label>
+            <label><input type="radio" name="debt" value="No"> No</label>
+          </div>
+        </div>
 
-      <label class="block font-medium mt-4 mb-1">Do you agree to be contacted before loan due date?</label>
-      <select class="w-full border border-gray-300 px-4 py-2 rounded">
-        <option>Yes</option>
-        <option>No</option>
-      </select>
+        <div>
+          <p>Do you have an active loan?</p>
+          <div class="flex gap-4 mt-1">
+            <label><input type="radio" name="loan" value="Yes"> Yes</label>
+            <label><input type="radio" name="loan" value="No"> No</label>
+          </div>
+        </div>
+
+        <div>
+          <p>Do you agree to be contacted before the loan due date?</p>
+          <div class="flex gap-4 mt-1">
+            <label><input type="radio" name="contact" value="Yes"> Yes</label>
+            <label><input type="radio" name="contact" value="No"> No</label>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Referee Contact -->
