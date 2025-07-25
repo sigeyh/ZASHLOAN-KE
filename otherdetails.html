@@ -11,18 +11,16 @@
   <!-- Header -->
   <div class="p-4 text-center shadow-md">
     <img src="zash-logo.jpeg" alt="Zash Loan" class="w-12 mx-auto mb-2">
-    <h1 class="text-xl font-semibold">Additional Information</h1>
-    <p class="text-gray-600">Tell us more about yourself</p>
+    <h1 class="text-xl font-semibold">More Details</h1>
+    <p class="text-gray-600">Help us know you better</p>
   </div>
 
   <!-- Form -->
-  <div class="p-6 max-w-md mx-auto space-y-4">
-
-    <!-- County -->
+  <div class="p-6 max-w-md mx-auto mt-4 space-y-4">
     <div>
       <label class="block font-medium">County</label>
       <select id="county" class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400">
-        <option disabled selected>Select your county</option>
+        <option disabled selected>Select County</option>
         <option>Baringo</option>
         <option>Bomet</option>
         <option>Bungoma</option>
@@ -47,6 +45,7 @@
         <option>Machakos</option>
         <option>Makueni</option>
         <option>Mandera</option>
+        <option>Marsabit</option>
         <option>Meru</option>
         <option>Migori</option>
         <option>Mombasa</option>
@@ -72,121 +71,97 @@
       </select>
     </div>
 
-    <!-- Town -->
     <div>
       <label class="block font-medium">Town</label>
       <input type="text" placeholder="Enter town"
         class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
     </div>
 
-    <!-- Education -->
     <div>
-      <label class="block font-medium">Education Level</label>
-      <select class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400">
-        <option disabled selected>Select education</option>
-        <option>Primary</option>
-        <option>Secondary</option>
-        <option>College</option>
-        <option>University</option>
-        <option>Postgraduate</option>
-      </select>
+      <label class="block font-medium">Education</label>
+      <input type="text" placeholder="e.g. Diploma, Degree"
+        class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
     </div>
 
-    <!-- Employment Type -->
     <div>
       <label class="block font-medium">Employment Type</label>
-      <select class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400">
-        <option disabled selected>Select employment Status</option>
-        <option>Self-employed</option>
-        <option>Employed</option>
-        <option>Goverment Employee</option>
-        <option>Student</option>
-        <option>Unemployed</option>
-        <option>Retired</option>
-      </select>
+      <input type="text" placeholder="e.g. Self-employed, Employed"
+        class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
     </div>
 
-    <!-- Monthly Income -->
     <div>
-      <label class="block font-medium">Monthly Income (KES)</label>
-      <input type="number" placeholder="e.g. 15000"
+      <label class="block font-medium">Monthly Income</label>
+      <input type="number" placeholder="Enter monthly income"
         class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
     </div>
 
     <!-- Questionnaire -->
     <div class="pt-4 border-t border-gray-200">
-      <p class="font-medium mb-2">Just a Few Final Questions</p>
+      <label class="block font-medium mb-1">Do you have children under 18?</label>
+      <select class="w-full border border-gray-300 px-4 py-2 rounded">
+        <option>Yes</option>
+        <option>No</option>
+      </select>
 
-      <div class="space-y-3">
-        <div>
-          <p>Do you have children under 18?</p>
-          <div class="flex gap-4 mt-1">
-            <label><input type="radio" name="children" value="Yes"> Yes</label>
-            <label><input type="radio" name="children" value="No"> No</label>
-          </div>
-        </div>
+      <label class="block font-medium mt-4 mb-1">Do you currently have outstanding debt?</label>
+      <select class="w-full border border-gray-300 px-4 py-2 rounded">
+        <option>Yes</option>
+        <option>No</option>
+      </select>
 
-        <div>
-          <p>Do you currently have outstanding debt?</p>
-          <div class="flex gap-4 mt-1">
-            <label><input type="radio" name="debt" value="Yes"> Yes</label>
-            <label><input type="radio" name="debt" value="No"> No</label>
-          </div>
-        </div>
+      <label class="block font-medium mt-4 mb-1">Do you have an active loan?</label>
+      <select class="w-full border border-gray-300 px-4 py-2 rounded">
+        <option>Yes</option>
+        <option>No</option>
+      </select>
 
-        <div>
-          <p>Do you have an active loan?</p>
-          <div class="flex gap-4 mt-1">
-            <label><input type="radio" name="loan" value="Yes"> Yes</label>
-            <label><input type="radio" name="loan" value="No"> No</label>
-          </div>
-        </div>
+      <label class="block font-medium mt-4 mb-1">Do you agree to be contacted before loan due date?</label>
+      <select class="w-full border border-gray-300 px-4 py-2 rounded">
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+    </div>
 
-        <div>
-          <p>Do you agree to be contacted before the loan due date?</p>
-          <div class="flex gap-4 mt-1">
-            <label><input type="radio" name="contact" value="Yes"> Yes</label>
-            <label><input type="radio" name="contact" value="No"> No</label>
-          </div>
-        </div>
+    <!-- Referee Contact -->
+    <div class="pt-6 border-t border-gray-200">
+      <p class="text-sm text-gray-600 mb-2">
+        To ensure faster credit processing, enter your contact person on information below. Should be 18–60 years old
+      </p>
+
+      <div class="mb-3">
+        <label class="block font-medium">Referee Full Name</label>
+        <input type="text" placeholder="Enter referee name"
+          class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
+      </div>
+
+      <div class="mb-3">
+        <label class="block font-medium">Referee Phone Number</label>
+        <input type="tel" placeholder="07XXXXXXXX"
+          class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
+      </div>
+
+      <div>
+        <label class="block font-medium">Relationship to Referee</label>
+        <select class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400">
+          <option disabled selected>Select relationship</option>
+          <option>Parent</option>
+          <option>Sibling</option>
+          <option>Friend</option>
+          <option>Spouse</option>
+          <option>Cousin</option>
+          <option>Colleague</option>
+          <option>Neighbor</option>
+          <option>Guardian</option>
+          <option>Other</option>
+        </select>
       </div>
     </div>
 
-<!-- Referee Contact -->
-<div class="pt-6 border-t border-gray-200">
-  <p class="text-sm text-gray-600 mb-2">
-    To ensure faster credit processing, enter your contact person on information below. Should be 18–60 years old
-  </p>
-
-  <div class="mb-3">
-    <label class="block font-medium">Referee Full Name</label>
-    <input type="text" placeholder="Enter referee name"
-      class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
+    <!-- Continue Button -->
+    <button onclick="window.location.href='confirmdetails.html'" class="w-full bg-red-500 text-white py-2 mt-6 rounded hover:bg-red-600">
+      Continue
+    </button>
   </div>
-
-  <div class="mb-3">
-    <label class="block font-medium">Referee Phone Number</label>
-    <input type="tel" placeholder="07XXXXXXXX"
-      class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
-  </div>
-
-  <div>
-    <label class="block font-medium">Relationship to Referee</label>
-    <select class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400">
-      <option disabled selected>Select relationship</option>
-      <option>Parent</option>
-      <option>Sibling</option>
-      <option>Friend</option>
-      <option>Spouse</option>
-      <option>Cousin</option>
-      <option>Colleague</option>
-      <option>Neighbor</option>
-      <option>Guardian</option>
-      <option>Other</option>
-    </select>
-  </div>
-</div>
-
 
   <!-- Footer -->
   <div class="bg-red-100 text-gray-800 p-4 mt-10 text-sm">
