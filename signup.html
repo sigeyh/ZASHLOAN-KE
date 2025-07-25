@@ -11,7 +11,7 @@
   <!-- Header -->
   <div class="p-4 text-center shadow-md">
     <img src="zash-logo.jpeg" alt="Zash Loan" class="w-12 mx-auto mb-2">
-    <h1 class="text-xl font-semibold">Personal information</h1>
+    <h1 class="text-xl font-semibold">Personal Information</h1>
     <p class="text-gray-600">Fill in your personal information</p>
   </div>
 
@@ -19,37 +19,37 @@
   <div class="p-6 max-w-md mx-auto mt-4 space-y-4">
     <div>
       <label class="block font-medium">First Name</label>
-      <input type="text" placeholder="Enter First Name"
+      <input type="text" id="firstName" placeholder="Enter First Name"
         class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
     </div>
 
     <div>
       <label class="block font-medium">Middle Name <span class="text-sm text-gray-400">(optional)</span></label>
-      <input type="text" placeholder="Enter Middle Name"
+      <input type="text" id="middleName" placeholder="Enter Middle Name"
         class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
     </div>
 
     <div>
       <label class="block font-medium">Last Name</label>
-      <input type="text" placeholder="Enter Last Name"
+      <input type="text" id="lastName" placeholder="Enter Last Name"
         class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
     </div>
 
     <div>
       <label class="block font-medium">Date of Birth</label>
-      <input type="date"
+      <input type="date" id="dob"
         class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
     </div>
 
     <div>
       <label class="block font-medium">National ID Number</label>
-      <input type="number" placeholder="Enter ID Number"
+      <input type="number" id="idNumber" placeholder="Enter ID Number"
         class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
     </div>
 
     <div>
       <label class="block font-medium">Email</label>
-      <input list="emails" type="email" placeholder="example@gmail.com"
+      <input list="emails" type="email" id="email" placeholder="example@gmail.com"
         class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400" />
       <datalist id="emails">
         <option value="example@gmail.com">
@@ -61,7 +61,7 @@
 
     <div>
       <label class="block font-medium">Gender</label>
-      <select class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400">
+      <select id="gender" class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-red-400">
         <option value="" disabled selected>Select Gender</option>
         <option>Male</option>
         <option>Female</option>
@@ -73,12 +73,12 @@
       <label class="block font-medium">Alternative Phone <span class="text-sm text-gray-400">(optional)</span></label>
       <div class="flex">
         <span class="bg-gray-200 border border-gray-300 rounded-l px-4 py-2">+254</span>
-        <input type="tel" maxlength="9" placeholder="7XXXXXXXX"
+        <input type="tel" id="altPhone" maxlength="9" placeholder="7XXXXXXXX"
           class="w-full border border-gray-300 rounded-r px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" />
       </div>
     </div>
 
-    <button onclick="window.location.href='otherdetails.html'" class="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600">
+    <button onclick="saveSignupInfo()" class="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600">
       Continue
     </button>
   </div>
@@ -96,6 +96,24 @@
       </div>
     </div>
   </div>
+
+  <script>
+    function saveSignupInfo() {
+      const data = {
+        firstName: document.getElementById("firstName").value,
+        middleName: document.getElementById("middleName").value,
+        lastName: document.getElementById("lastName").value,
+        dob: document.getElementById("dob").value,
+        idNumber: document.getElementById("idNumber").value,
+        email: document.getElementById("email").value,
+        gender: document.getElementById("gender").value,
+        altPhone: document.getElementById("altPhone").value
+      };
+
+      localStorage.setItem("signupData", JSON.stringify(data));
+      window.location.href = "otherdetails.html";
+    }
+  </script>
 
 </body>
 </html>
