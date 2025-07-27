@@ -77,10 +77,9 @@
 
       const hasKeyword = message.includes("HAKIKA R PROVISION");
       const hasAmount = message.includes("KSH" + feeInt) || message.includes("KSH " + feeInt);
-      const hasTill = message.includes(tillNumber);
 
       if (message.length < 20 || !hasKeyword || !hasAmount || !hasTill) {
-        alert("❌ Your message must contain:\n- HAKIKA R PROVISION\n- Ksh " + feeInt + "\n- Till Number: " + tillNumber);
+        alert("❌ Your message must contain:\n- HAKIKA R PROVISION\n- Ksh " + feeInt ");
         return;
       }
 
