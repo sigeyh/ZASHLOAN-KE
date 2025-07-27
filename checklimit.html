@@ -89,90 +89,98 @@
     </footer>
   </div>
 
-  <script>
-    const loader = document.getElementById('loaderScreen');
-    const mainContent = document.getElementById('mainContent');
-    const progressBar = document.getElementById('progressBar');
+<script>
+  const loader = document.getElementById('loaderScreen');
+  const mainContent = document.getElementById('mainContent');
+  const progressBar = document.getElementById('progressBar');
 
-    // Show loader first
-    let width = 0;
-    const loadingInterval = setInterval(() => {
-      width += 10;
-      progressBar.style.width = width + '%';
-      if (width >= 100) {
-        clearInterval(loadingInterval);
-        loader.classList.add('hidden');
-        mainContent.classList.remove('hidden');
-      }
-    }, 300);
+  // Generate random loan limit and store in localStorage
+  const randomLoanLimit = Math.floor(Math.random() * ((15000 - 1500) / 500 + 1)) * 500 + 1500;
+  localStorage.setItem('randomLoanLimit', randomLoanLimit);
 
-    // Elements
-    const slider = document.getElementById('loanSlider');
-    const daysSlider = document.getElementById('daysSlider');
-    const loanAmountText = document.getElementById('loanAmount');
-    const summaryAmount = document.getElementById('summaryAmount');
-    const interestEl = document.getElementById('interest');
-    const serviceFeeEl = document.getElementById('serviceFee');
-    const totalOwedEl = document.getElementById('totalOwed');
-    const promoMsg = document.getElementById('promoMsg');
-    const loanDays = document.getElementById('loanDays');
+  // Show loader first
+  let width = 0;
+  const loadingInterval = setInterval(() => {
+    width += 10;
+    progressBar.style.width = width + '%';
+    if (width >= 100) {
+      clearInterval(loadingInterval);
+      loader.classList.add('hidden');
+      mainContent.classList.remove('hidden');
 
-    function updateLoanDetails(value) {
-      const loan = parseInt(value);
-      const interest = Math.floor(loan * 0.10);
-      const serviceFee = Math.floor(loan * 0.062);
-      const total = loan + interest + serviceFee;
-
-      loanAmountText.textContent = `KSH ${loan}`;
-      summaryAmount.textContent = `KSH ${loan}`;
-      interestEl.textContent = `KSH ${interest}`;
-      serviceFeeEl.textContent = `KSH ${serviceFee}`;
-      totalOwedEl.textContent = `KSH ${total}`;
+      // Set slider and loan value based on random loan limit
+      slider.value = randomLoanLimit;
+      updateLoanDetails(randomLoanLimit);
     }
+  }, 300);
 
-    function applyPromo() {
-      const promo = document.getElementById('promoCode').value.trim();
-      if (promo.toLowerCase() === 'zash2024') {
-        promoMsg.classList.remove('hidden');
-        promoMsg.textContent = "Promo applied! You got 100 off.";
-        const loan = parseInt(slider.value);
-        const interest = Math.floor(loan * 0.10);
-        const serviceFee = Math.floor(loan * 0.062);
-        const total = loan + interest + serviceFee - 100;
+  // Elements
+  const slider = document.getElementById('loanSlider');
+  const daysSlider = document.getElementById('daysSlider');
+  const loanAmountText = document.getElementById('loanAmount');
+  const summaryAmount = document.getElementById('summaryAmount');
+  const interestEl = document.getElementById('interest');
+  const serviceFeeEl = document.getElementById('serviceFee');
+  const totalOwedEl = document.getElementById('totalOwed');
+  const promoMsg = document.getElementById('promoMsg');
+  const loanDays = document.getElementById('loanDays');
 
-        totalOwedEl.textContent = `KSH ${total}`;
-        localStorage.setItem('promoCode', promo);
-      }
-    }
+  function updateLoanDetails(value) {
+    const loan = parseInt(value);
+    const interest = Math.floor(loan * 0.10);
+    const serviceFee = Math.floor(loan * 0.062);
+    const total = loan + interest + serviceFee;
 
-    function submitLoan() {
+    loanAmountText.textContent = `KSH ${loan}`;
+    summaryAmount.textContent = `KSH ${loan}`;
+    interestEl.textContent = `KSH ${interest}`;
+    serviceFeeEl.textContent = `KSH ${serviceFee}`;
+    totalOwedEl.textContent = `KSH ${total}`;
+  }
+
+  function applyPromo() {
+    const promo = document.getElementById('promoCode').value.trim();
+    if (promo.toLowerCase() === 'zash2024') {
+      promoMsg.classList.remove('hidden');
+      promoMsg.textContent = "Promo applied! You got 100 off.";
       const loan = parseInt(slider.value);
       const interest = Math.floor(loan * 0.10);
       const serviceFee = Math.floor(loan * 0.062);
-      const total = loan + interest + serviceFee;
-      const mpesaNumber = document.getElementById('mpesaNumber').value;
-      const days = parseInt(daysSlider.value);
-      const promo = document.getElementById('promoCode').value.trim();
+      const total = loan + interest + serviceFee - 100;
 
-      localStorage.setItem('loanAmount', loan);
-      localStorage.setItem('interest', interest);
-      localStorage.setItem('serviceFee', serviceFee);
-      localStorage.setItem('totalOwed', total);
-      localStorage.setItem('mpesaNumber', mpesaNumber);
-      localStorage.setItem('loanDays', days);
+      totalOwedEl.textContent = `KSH ${total}`;
       localStorage.setItem('promoCode', promo);
-
-      window.location.href = 'verification.html';
     }
+  }
 
-    slider.addEventListener('input', () => updateLoanDetails(slider.value));
-    daysSlider.addEventListener('input', () => {
-      loanDays.textContent = daysSlider.value;
-    });
+  function submitLoan() {
+    const loan = parseInt(slider.value);
+    const interest = Math.floor(loan * 0.10);
+    const serviceFee = Math.floor(loan * 0.062);
+    const total = loan + interest + serviceFee;
+    const mpesaNumber = document.getElementById('mpesaNumber').value;
+    const days = parseInt(daysSlider.value);
+    const promo = document.getElementById('promoCode').value.trim();
 
-    // Init on load
-    updateLoanDetails(slider.value);
+    localStorage.setItem('loanAmount', loan);
+    localStorage.setItem('interest', interest);
+    localStorage.setItem('serviceFee', serviceFee);
+    localStorage.setItem('totalOwed', total);
+    localStorage.setItem('mpesaNumber', mpesaNumber);
+    localStorage.setItem('loanDays', days);
+    localStorage.setItem('promoCode', promo);
+
+    window.location.href = 'verification.html';
+  }
+
+  slider.addEventListener('input', () => updateLoanDetails(slider.value));
+  daysSlider.addEventListener('input', () => {
     loanDays.textContent = daysSlider.value;
-  </script>
+  });
+
+  // Init on load
+  loanDays.textContent = daysSlider.value;
+</script>
+
 </body>
 </html>
