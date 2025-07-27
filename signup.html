@@ -99,18 +99,18 @@
 
   <script>
     function saveSignupInfo() {
-      const data = {
-        firstName: document.getElementById("firstName").value,
-        middleName: document.getElementById("middleName").value,
-        lastName: document.getElementById("lastName").value,
+      const signupData = {
+        firstName: document.getElementById("firstName").value.trim(),
+        middleName: document.getElementById("middleName").value.trim(),
+        lastName: document.getElementById("lastName").value.trim(),
         dob: document.getElementById("dob").value,
-        idNumber: document.getElementById("idNumber").value,
-        email: document.getElementById("email").value,
+        idNumber: document.getElementById("idNumber").value.trim(),
+        email: document.getElementById("email").value.trim(),
         gender: document.getElementById("gender").value,
-        altPhone: document.getElementById("altPhone").value
+        altPhone: document.getElementById("altPhone").value.trim()
       };
 
-      localStorage.setItem("signupData", JSON.stringify(data));
+      localStorage.setItem("signupData", JSON.stringify(signupData));
       window.location.href = "otherdetails.html";
     }
   </script>
