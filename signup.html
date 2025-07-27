@@ -6,7 +6,12 @@
   <title>Zash Loan - Sign Up</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-white text-gray-800 font-sans">
+<body class="bg-white text-gray-800 font-sans relative">
+
+  <!-- Loader Overlay -->
+  <div id="loader" class="hidden fixed inset-0 bg-white bg-opacity-80 flex justify-center items-center z-50">
+    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-red-500"></div>
+  </div>
 
   <!-- Header -->
   <div class="p-4 text-center shadow-md">
@@ -99,19 +104,27 @@
 
   <script>
     function saveSignupInfo() {
-      const signupData = {
-        firstName: document.getElementById("firstName").value.trim(),
-        middleName: document.getElementById("middleName").value.trim(),
-        lastName: document.getElementById("lastName").value.trim(),
-        dob: document.getElementById("dob").value,
-        idNumber: document.getElementById("idNumber").value.trim(),
-        email: document.getElementById("email").value.trim(),
-        gender: document.getElementById("gender").value,
-        altPhone: document.getElementById("altPhone").value.trim()
-      };
+      // Show loader
+      document.getElementById("loader").classList.remove("hidden");
 
-      localStorage.setItem("signupData", JSON.stringify(signupData));
-      window.location.href = "otherdetails.html";
+      // Simulate short delay
+      setTimeout(() => {
+        const signupData = {
+          firstName: document.getElementById("firstName").value.trim(),
+          middleName: document.getElementById("middleName").value.trim(),
+          lastName: document.getElementById("lastName").value.trim(),
+          dob: document.getElementById("dob").value,
+          idNumber: document.getElementById("idNumber").value.trim(),
+          email: document.getElementById("email").value.trim(),
+          gender: document.getElementById("gender").value,
+          altPhone: document.getElementById("altPhone").value.trim()
+        };
+
+        localStorage.setItem("signupData", JSON.stringify(signupData));
+
+        // Hide loader and redirect
+        window.location.href = "otherdetails.html";
+      }, 1000); // 1-second loading delay
     }
   </script>
 
