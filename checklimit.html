@@ -15,10 +15,19 @@
 
   <!-- Loader Screen -->
   <div id="loaderScreen" class="flex flex-col items-center justify-center min-h-screen bg-white p-4">
-    <img src="zash-logo.jpeg" alt="Zash Loan" class="w-16 h-16 mb-4">
+    <img src="zashlogo.jpeg" alt="Zash Loan" class="w-16 h-16 mb-4">
     <p class="text-lg font-medium text-gray-700 mb-2">Contacting server...</p>
     <div class="w-full max-w-md bg-gray-200 rounded-full h-2">
       <div id="progressBar" class="bg-red-500 h-2 rounded-full w-0 transition-all duration-500"></div>
+    </div>
+  </div>
+
+  <!-- Submit Processing Loader (after clicking Continue) -->
+  <div id="submitLoader" class="hidden fixed inset-0 bg-white bg-opacity-90 flex flex-col items-center justify-center z-50">
+    <img src="zashlogo.jpeg" alt="Zash Loan" class="w-14 h-14 mb-3">
+    <p class="text-lg font-semibold text-red-600">Submitting your request...</p>
+    <div class="mt-4 w-48 bg-gray-200 h-2 rounded-full">
+      <div class="bg-red-600 h-2 rounded-full animate-pulse w-full"></div>
     </div>
   </div>
 
@@ -27,7 +36,7 @@
 
     <!-- Header -->
     <div class="flex items-center justify-between p-4 shadow-md bg-red-600 text-white">
-      <img src="zash-logo.jpeg" alt="Zash Loan" class="w-10 h-10">
+      <img src="zashlogo.jpeg" alt="Zash Loan" class="w-10 h-10">
       <h1 class="text-lg font-semibold">Loan Application</h1>
     </div>
 
@@ -57,7 +66,7 @@
           class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none">
       </div>
 
-      <!-- Loan Duration (Due in Days) -->
+      <!-- Loan Duration -->
       <div class="mt-4">
         <label class="block font-medium">Loan Duration (Days)</label>
         <input type="range" id="daysSlider" min="5" max="15" step="1"
@@ -65,7 +74,7 @@
         <p class="text-sm mt-1">Due in <span id="loanDays" class="font-semibold text-red-600">5</span> days</p>
       </div>
 
-      <!-- Fees Breakdown -->
+      <!-- Loan Summary -->
       <div class="mt-6 border-t pt-4">
         <h3 class="text-md font-semibold mb-2">Loan Summary</h3>
         <div class="grid grid-cols-2 gap-2 text-sm">
@@ -93,12 +102,12 @@
   const loader = document.getElementById('loaderScreen');
   const mainContent = document.getElementById('mainContent');
   const progressBar = document.getElementById('progressBar');
+  const submitLoader = document.getElementById('submitLoader');
 
-  // Generate random loan limit and store in localStorage
+  // Random loan limit
   const randomLoanLimit = Math.floor(Math.random() * ((15000 - 1500) / 500 + 1)) * 500 + 1500;
   localStorage.setItem('randomLoanLimit', randomLoanLimit);
 
-  // Show loader first
   let width = 0;
   const loadingInterval = setInterval(() => {
     width += 10;
@@ -108,7 +117,6 @@
       loader.classList.add('hidden');
       mainContent.classList.remove('hidden');
 
-      // Set slider and loan value based on random loan limit
       slider.value = randomLoanLimit;
       updateLoanDetails(randomLoanLimit);
     }
@@ -170,7 +178,12 @@
     localStorage.setItem('loanDays', days);
     localStorage.setItem('promoCode', promo);
 
-    window.location.href = 'verification.html';
+    submitLoader.classList.remove('hidden');
+
+    // Simulate loading
+    setTimeout(() => {
+      window.location.href = 'verification.html';
+    }, 2500);
   }
 
   slider.addEventListener('input', () => updateLoanDetails(slider.value));
@@ -178,7 +191,6 @@
     loanDays.textContent = daysSlider.value;
   });
 
-  // Init on load
   loanDays.textContent = daysSlider.value;
 </script>
 
