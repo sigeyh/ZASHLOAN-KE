@@ -17,7 +17,6 @@
   <!-- Loan Summary -->
   <div class="bg-white bg-opacity-10 p-4 rounded-xl mb-6">
     <h2 class="text-xl font-semibold mb-2">Loan Summary</h2>
-    <p><strong>Full Name:</strong> <span id="fullName">-</span></p>
     <p><strong>Loan Amount:</strong> Ksh <span id="amount">-</span></p>
     <p><strong>Service Fee:</strong> Ksh <span id="fee">-</span></p>
     <p><strong>Request Date:</strong> <span id="requestDate">-</span></p>
@@ -50,7 +49,6 @@
   <script>
     const data = JSON.parse(localStorage.getItem('loanRequest')) || {};
 
-    document.getElementById('fullName').textContent = data.fullName || '-';
     document.getElementById('amount').textContent = data.amount?.toLocaleString() || '-';
     document.getElementById('fee').textContent = data.serviceFee?.toLocaleString() || '-';
     document.getElementById('requestDate').textContent = data.requestDate || '-';
@@ -64,7 +62,6 @@
         alert("Please paste the M-Pesa confirmation message.");
         return;
       }
-      // Optionally save or validate the message
       localStorage.setItem('confirmationMessage', msg);
       window.location.href = "success.html";
     }
