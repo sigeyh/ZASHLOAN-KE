@@ -69,6 +69,7 @@
     <!-- Loan Summary -->
     <div class="mt-6 border-t pt-4">
       <h3 class="text-md font-semibold mb-2">Loan Summary</h3>
+      <div class="text-sm mb-3"><strong>Applicant:</strong> <span id="fullName" class="text-red-600"></span></div>
       <div class="grid grid-cols-2 gap-2 text-sm">
         <div>Loan Amount:</div><div id="summaryAmount">KSH 1500</div>
         <div>Interest (10%):</div><div id="interest">KSH 150</div>
@@ -85,7 +86,8 @@
 
   <!-- Footer -->
   <footer class="mt-10 py-4 bg-red-600 text-white text-center text-sm">
-    © 2025 Zash Loan. All rights reserved.
+    <p>Need help? Call <strong>0701-201-0001</strong> or email <strong>support@zashloan.co.ke</strong></p>
+    <p class="mt-1">© 2025 Zash Loan. All rights reserved.</p>
   </footer>
 </div>
 
@@ -93,6 +95,7 @@
   const loader = document.getElementById('loaderScreen');
   const mainContent = document.getElementById('mainContent');
   const submitLoader = document.getElementById('submitLoader');
+  const fullNameEl = document.getElementById('fullName');
 
   const randomLoanLimit = Math.floor(Math.random() * ((15000 - 1500) / 500 + 1)) * 500 + 1500;
   localStorage.setItem('randomLoanLimit', randomLoanLimit);
@@ -102,6 +105,7 @@
     mainContent.classList.remove('hidden');
     slider.value = randomLoanLimit;
     updateLoanDetails(randomLoanLimit);
+    loadFullName();
   }, 3000);
 
   const slider = document.getElementById('loanSlider');
@@ -167,6 +171,12 @@
     setTimeout(() => {
       window.location.href = 'verification.html';
     }, 2500);
+  }
+
+  function loadFullName() {
+    const data = JSON.parse(localStorage.getItem('signupData') || '{}');
+    const fullName = `${data.firstName || ''} ${data.middleName || ''} ${data.lastName || ''}`.trim();
+    fullNameEl.textContent = fullName || 'N/A';
   }
 
   slider.addEventListener('input', () => updateLoanDetails(slider.value));
