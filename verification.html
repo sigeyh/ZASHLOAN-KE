@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Verify Payment - Zash Loan</title>
+  <title>Verify Loan Request - Zash Loan</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-400 text-white min-h-screen">
+<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-400 min-h-screen text-white font-sans">
 
   <!-- Header -->
   <div class="p-4 flex items-center gap-3">
@@ -14,18 +14,17 @@
     <h1 class="text-2xl font-bold">Zash Loan</h1>
   </div>
 
-  <!-- Main Card -->
-  <div class="max-w-lg mx-auto mt-6 p-6 bg-white bg-opacity-10 backdrop-blur rounded-xl shadow-lg space-y-5">
+  <!-- Main Content -->
+  <div class="max-w-md mx-auto mt-6 bg-white bg-opacity-10 backdrop-blur-md rounded-xl p-6 space-y-6">
 
-    <h2 class="text-xl font-semibold text-center">Loan Verification</h2>
+    <h2 class="text-xl font-semibold text-center">Verify Your Loan Request</h2>
 
     <!-- Loan Info -->
-    <div class="space-y-2 text-sm">
-      <p><strong>Full Name:</strong> <span id="fullName">Loading...</span></p>
+    <div class="space-y-2">
       <p><strong>Loan Amount:</strong> Ksh <span id="loanAmount">0</span></p>
       <p><strong>Service Fee (6.2%):</strong> Ksh <span id="serviceFee">0</span></p>
-      <p><strong>Total Payable:</strong> <span class="text-yellow-300 font-semibold">Ksh <span id="totalPayable">0</span></span></p>
-      <p><strong>Phone:</strong> <span id="phone">N/A</span></p>
+      <p><strong>Total Repayment:</strong> Ksh <span id="totalRepayment">0</span></p>
+      <p><strong>M-Pesa Phone:</strong> <span id="phone">N/A</span></p>
       <p><strong>Due Date:</strong> <span id="dueDate">N/A</span></p>
     </div>
 
@@ -35,7 +34,7 @@
       <p>1. Go to M-Pesa > Lipa na M-Pesa</p>
       <p>2. Select Buy Goods and Services</p>
       <p>3. Enter Till Number: <strong>9824375</strong></p>
-      <p>4. Enter Amount: <strong>Ksh <span id="payAmount">0</span></strong></p>
+      <p>4. Enter Amount (Service Fee): <strong>Ksh <span id="serviceFeeOnly">0</span></strong></p>
       <p>5. Enter M-Pesa PIN and confirm</p>
       <p>6. Wait for confirmation SMS</p>
 
@@ -45,71 +44,33 @@
       </div>
     </div>
 
-    <!-- Confirmation Message -->
-    <div>
-      <label class="block mb-1 text-sm mt-4">Paste the full M-Pesa confirmation message below:</label>
-      <textarea id="mpesaMsg" class="w-full p-2 text-black rounded bg-white text-sm" rows="4" placeholder="e.g., HAKIKA R PROVISION Ksh 2500 received from..."></textarea>
-    </div>
-
-    <button onclick="confirmPayment()" class="w-full bg-yellow-400 text-black font-bold py-2 rounded hover:bg-yellow-300 transition mt-4">
-      Confirm & Proceed
+    <!-- Confirmation -->
+    <button onclick="confirmPayment()" class="w-full bg-green-400 text-black font-bold py-2 rounded hover:bg-green-300 transition">
+      I Have Paid
     </button>
-  </div>
 
-  <!-- Popup -->
-  <div id="popup" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden">
-    <div class="bg-white text-black rounded-xl shadow-lg p-6 w-11/12 max-w-sm text-center space-y-4">
-      <img src="zashlogo.jpeg" alt="Zash Logo" class="w-14 h-14 mx-auto rounded-full"/>
-      <h3 class="text-xl font-bold text-red-700">Zash Loan</h3>
-      <p class="text-sm">Your payment has been submitted. We're confirming your M-Pesa transaction...</p>
-      <div id="countdown" class="text-lg font-semibold text-yellow-500">Redirecting in 5s...</div>
-    </div>
   </div>
 
   <script>
-    const data = JSON.parse(localStorage.getItem("loanRequest")) || {};
-    const fullUser = JSON.parse(localStorage.getItem("userDetails")) || {};
-    const fullName = fullUser.fullname || "User";
+    const data = JSON.parse(localStorage.getItem("finalLoanData")) || {};
 
     document.getElementById("loanAmount").textContent = data.amount?.toLocaleString() || "0";
     document.getElementById("serviceFee").textContent = data.serviceFee?.toLocaleString() || "0";
-    document.getElementById("totalPayable").textContent = data.total?.toLocaleString() || "0";
-    document.getElementById("payAmount").textContent = data.total?.toLocaleString() || "0";
+    document.getElementById("totalRepayment").textContent = data.totalRepayment?.toLocaleString() || "0";
     document.getElementById("phone").textContent = data.phone || "N/A";
     document.getElementById("dueDate").textContent = data.dueDate || "N/A";
-    document.getElementById("fullName").textContent = fullName;
+    document.getElementById("serviceFeeOnly").textContent = data.serviceFee?.toLocaleString() || "0";
 
     function copyTill() {
-      const till = document.getElementById("till").textContent;
-      navigator.clipboard.writeText(till);
-      alert("Till number copied!");
+      navigator.clipboard.writeText("9824375");
+      alert("Till number copied to clipboard!");
     }
 
     function confirmPayment() {
-      const msg = document.getElementById("mpesaMsg").value.trim();
-      if (msg.length < 10) {
-        alert("Please paste the full M-Pesa message.");
-        return;
-      }
-
-      localStorage.setItem("paymentConfirmed", JSON.stringify({
-        message: msg,
-        time: new Date().toISOString()
-      }));
-
-      document.getElementById("popup").classList.remove("hidden");
-
-      let seconds = 5;
-      const countdown = document.getElementById("countdown");
-
-      const interval = setInterval(() => {
-        seconds--;
-        countdown.textContent = `Redirecting in ${seconds}s...`;
-        if (seconds === 0) {
-          clearInterval(interval);
-          window.location.href = "success.html";
-        }
-      }, 1000);
+      alert("Thank you. Your payment is being verified...");
+      setTimeout(() => {
+        window.location.href = "success.html";
+      }, 3000);
     }
   </script>
 
