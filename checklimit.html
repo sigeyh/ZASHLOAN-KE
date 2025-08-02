@@ -44,12 +44,14 @@
       <p class="text-xl font-bold">You qualify for up to:</p>
       <p class="text-3xl font-extrabold text-yellow-300">Ksh <span id="loanLimit">0</span></p>
       <p class="text-sm">A 6.2% service fee will apply</p>
+      <button onclick="goNext()" class="mt-4 bg-yellow-300 text-red-800 px-6 py-2 rounded-full font-semibold hover:bg-yellow-400 transition">
+        Continue
+      </button>
     </div>
 
   </div>
 
   <script>
-    // Simulate delay
     const loadingSection = document.getElementById("loadingSection");
     const resultSection = document.getElementById("resultSection");
     const userName = document.getElementById("userName");
@@ -59,8 +61,8 @@
     const signupData = JSON.parse(localStorage.getItem("signupData")) || {};
     userName.innerText = signupData.firstName || "User";
 
-    // Generate random loan amount between 1540 and 3500
-    const loanAmount = Math.floor(Math.random() * (3500 - 1540 + 1)) + 1540;
+    // Generate random loan amount between 2500 and 12000
+    const loanAmount = Math.floor(Math.random() * (12000 - 2500 + 1)) + 2500;
     const serviceFee = Math.round(loanAmount * 0.062);
 
     // Save to localStorage
@@ -76,12 +78,12 @@
       loadingSection.classList.add("hidden");
       loanLimitEl.innerText = loanAmount;
       resultSection.classList.remove("hidden");
-
-      // After another 5 seconds, go to next page
-      setTimeout(() => {
-        window.location.href = "loan.html";
-      }, 5000);
     }, 5000);
+
+    // Proceed to loan.html
+    function goNext() {
+      window.location.href = "loan.html";
+    }
   </script>
 
 </body>
