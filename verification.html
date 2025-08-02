@@ -5,143 +5,113 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Verify Payment - Zash Loan</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .loader {
-      border: 6px solid #f3f3f3;
-      border-top: 6px solid #e11d48;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
 </head>
-<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-400 min-h-screen text-white font-sans">
+<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-400 text-white min-h-screen">
 
-  <!-- LOADER -->
-  <div id="loaderScreen" class="fixed inset-0 flex items-center justify-center bg-white z-50">
-    <div class="text-center">
-      <div class="loader mx-auto mb-4"></div>
-      <p class="text-gray-700 font-medium">Preparing your loan details...</p>
-    </div>
+  <!-- Header -->
+  <div class="p-4 flex items-center gap-3">
+    <img src="zashlogo.jpeg" alt="Zash Logo" class="w-12 h-12 rounded-full object-cover"/>
+    <h1 class="text-2xl font-bold">Zash Loan</h1>
   </div>
 
-  <!-- Main Content -->
-  <div id="mainContent" class="hidden">
-    <!-- Header -->
-    <div class="p-4 flex items-center gap-3">
-      <img src="zashlogo.jpeg" alt="Zash Logo" class="w-12 h-12 rounded-full object-cover"/>
-      <h1 class="text-2xl font-bold">Zash Loan</h1>
+  <!-- Main Card -->
+  <div class="max-w-lg mx-auto mt-6 p-6 bg-white bg-opacity-10 backdrop-blur rounded-xl shadow-lg space-y-5">
+
+    <h2 class="text-xl font-semibold text-center">Loan Verification</h2>
+
+    <!-- Loan Info -->
+    <div class="space-y-2 text-sm">
+      <p><strong>Full Name:</strong> <span id="fullName">Loading...</span></p>
+      <p><strong>Loan Amount:</strong> Ksh <span id="loanAmount">0</span></p>
+      <p><strong>Service Fee (6.2%):</strong> Ksh <span id="serviceFee">0</span></p>
+      <p><strong>Total Payable:</strong> <span class="text-yellow-300 font-semibold">Ksh <span id="totalPayable">0</span></span></p>
+      <p><strong>Phone:</strong> <span id="phone">N/A</span></p>
+      <p><strong>Due Date:</strong> <span id="dueDate">N/A</span></p>
     </div>
 
-    <!-- Main Loan Section -->
-    <div class="max-w-md mx-auto mt-4 bg-white bg-opacity-10 backdrop-blur-md rounded-xl p-6 space-y-5">
-      <h2 class="text-xl font-semibold text-center mb-2">Hi, <span id="fullName">User</span></h2>
+    <!-- How to Pay -->
+    <div class="bg-white bg-opacity-5 rounded p-4 text-sm space-y-1 border border-white border-opacity-20">
+      <h3 class="font-bold text-lg">📲 How to Pay</h3>
+      <p>1. Go to M-Pesa > Lipa na M-Pesa</p>
+      <p>2. Select Buy Goods and Services</p>
+      <p>3. Enter Till Number: <strong>9824375</strong></p>
+      <p>4. Enter Amount: <strong>Ksh <span id="payAmount">0</span></strong></p>
+      <p>5. Enter M-Pesa PIN and confirm</p>
+      <p>6. Wait for confirmation SMS</p>
 
-      <p class="text-center text-base bg-yellow-200 text-black px-4 py-2 rounded font-semibold leading-6">
-        🎉 Great news! Your loan is approved.<br/>
-        To unlock your funds instantly, kindly complete the payment below.
-      </p>
-
-      <div class="mt-4 space-y-1 text-sm">
-        <p><span class="font-semibold">Loan Amount:</span> Ksh <span id="amount">-</span></p>
-        <p><span class="font-semibold">Service Fee:</span> Ksh <span id="serviceFee">-</span></p>
-        <p><span class="font-semibold">Total Repayment:</span> Ksh <span id="totalRepayment">-</span></p>
-        <p><span class="font-semibold">Phone Number:</span> <span id="phone">-</span></p>
-        <p><span class="font-semibold">Due Date:</span> <span id="dueDate">-</span></p>
+      <div class="flex justify-between items-center mt-3">
+        <span class="font-bold text-lg">Hakika Till: <span id="till">9824375</span></span>
+        <button onclick="copyTill()" class="bg-yellow-400 text-black text-sm px-3 py-1 rounded hover:bg-yellow-300">Copy</button>
       </div>
-
-      <button onclick="openModal()" class="w-full mt-6 bg-yellow-300 text-black font-bold py-2 rounded hover:bg-yellow-200 transition">
-        Pay Now to Receive Loan
-      </button>
     </div>
+
+    <!-- Confirmation Message -->
+    <div>
+      <label class="block mb-1 text-sm mt-4">Paste the full M-Pesa confirmation message below:</label>
+      <textarea id="mpesaMsg" class="w-full p-2 text-black rounded bg-white text-sm" rows="4" placeholder="e.g., HAKIKA R PROVISION Ksh 2500 received from..."></textarea>
+    </div>
+
+    <button onclick="confirmPayment()" class="w-full bg-yellow-400 text-black font-bold py-2 rounded hover:bg-yellow-300 transition mt-4">
+      Confirm & Proceed
+    </button>
   </div>
 
-  <!-- Modal Background -->
-  <div id="modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-    <div class="bg-gradient-to-br from-red-800 via-red-600 to-red-500 text-white rounded-xl max-w-md w-full p-6 relative">
-      <button onclick="closeModal()" class="absolute top-2 right-3 text-2xl font-bold text-white">&times;</button>
-
-      <h3 class="text-xl font-semibold text-center mb-4">Complete Your Payment</h3>
-
-      <!-- Payment Instructions -->
-      <div class="text-sm mb-4">
-        <p class="font-semibold mb-2">📲 How to Pay</p>
-        <ol class="list-decimal ml-4 space-y-1 text-white">
-          <li>Go to <strong>M-Pesa > Lipa na M-Pesa</strong></li>
-          <li>Select <strong>Buy Goods and Services</strong></li>
-          <li>Enter <strong>Till Number: 9824375</strong></li>
-          <li>Enter <strong>Amount: Ksh <span id="payAmount">-</span></strong></li>
-          <li>Enter your <strong>M-Pesa PIN</strong> and confirm</li>
-          <li>Wait for confirmation SMS</li>
-        </ol>
-      </div>
-
-      <!-- Copy Till -->
-      <div class="flex items-center gap-2 mb-4">
-        <input id="tillNumber" type="text" value="9824375" readonly class="w-full px-3 py-2 rounded text-black font-semibold"/>
-        <button onclick="copyTill()" class="bg-yellow-300 text-black px-3 py-2 rounded hover:bg-yellow-200">Copy</button>
-      </div>
-
-      <!-- Confirmation Msg -->
-      <label for="confirmationMsg" class="block font-medium mb-1 text-white">Paste M-Pesa Confirmation:</label>
-      <textarea id="confirmationMsg" rows="3" placeholder="e.g., HAKIKA R PROVISION Ksh XX received..." class="w-full p-3 rounded border text-black mb-4"></textarea>
-
-      <button onclick="confirmPayment()" class="w-full bg-green-400 text-black font-bold py-2 rounded hover:bg-green-300 transition">
-        Submit
-      </button>
+  <!-- Popup -->
+  <div id="popup" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden">
+    <div class="bg-white text-black rounded-xl shadow-lg p-6 w-11/12 max-w-sm text-center space-y-4">
+      <img src="zashlogo.jpeg" alt="Zash Logo" class="w-14 h-14 mx-auto rounded-full"/>
+      <h3 class="text-xl font-bold text-red-700">Zash Loan</h3>
+      <p class="text-sm">Your payment has been submitted. We're confirming your M-Pesa transaction...</p>
+      <div id="countdown" class="text-lg font-semibold text-yellow-500">Redirecting in 5s...</div>
     </div>
   </div>
 
   <script>
-    const loan = JSON.parse(localStorage.getItem("finalLoanData")) || {};
-    const user = JSON.parse(localStorage.getItem("signupData")) || {};
+    const data = JSON.parse(localStorage.getItem("loanRequest")) || {};
+    const fullUser = JSON.parse(localStorage.getItem("userDetails")) || {};
+    const fullName = fullUser.fullname || "User";
 
-    document.getElementById('fullName').innerText = user.fullname || "User";
-    document.getElementById('amount').innerText = loan.amount || "-";
-    document.getElementById('serviceFee').innerText = loan.serviceFee || "-";
-    document.getElementById('totalRepayment').innerText = loan.totalRepayment || "-";
-    document.getElementById('phone').innerText = loan.phone || "-";
-    document.getElementById('dueDate').innerText = loan.dueDate || "-";
-    document.getElementById('payAmount').innerText = loan.serviceFee || "-";
-
-    // Loader timeout
-    window.onload = () => {
-      setTimeout(() => {
-        document.getElementById("loaderScreen").style.display = "none";
-        document.getElementById("mainContent").classList.remove("hidden");
-      }, 3000);
-    };
-
-    function openModal() {
-      document.getElementById("modal").classList.remove("hidden");
-    }
-
-    function closeModal() {
-      document.getElementById("modal").classList.add("hidden");
-    }
+    document.getElementById("loanAmount").textContent = data.amount?.toLocaleString() || "0";
+    document.getElementById("serviceFee").textContent = data.serviceFee?.toLocaleString() || "0";
+    document.getElementById("totalPayable").textContent = data.total?.toLocaleString() || "0";
+    document.getElementById("payAmount").textContent = data.total?.toLocaleString() || "0";
+    document.getElementById("phone").textContent = data.phone || "N/A";
+    document.getElementById("dueDate").textContent = data.dueDate || "N/A";
+    document.getElementById("fullName").textContent = fullName;
 
     function copyTill() {
-      const till = document.getElementById("tillNumber");
-      till.select();
-      document.execCommand("copy");
+      const till = document.getElementById("till").textContent;
+      navigator.clipboard.writeText(till);
       alert("Till number copied!");
     }
 
     function confirmPayment() {
-      const msg = document.getElementById("confirmationMsg").value.trim();
-      if (!msg || !msg.toUpperCase().includes("HAKIKA")) {
-        alert("❌ Please enter a valid confirmation message including 'HAKIKA'");
+      const msg = document.getElementById("mpesaMsg").value.trim();
+      if (msg.length < 10) {
+        alert("Please paste the full M-Pesa message.");
         return;
       }
-      alert("✅ Payment submitted successfully.");
-      window.location.href = "success.html";
+
+      localStorage.setItem("paymentConfirmed", JSON.stringify({
+        message: msg,
+        time: new Date().toISOString()
+      }));
+
+      document.getElementById("popup").classList.remove("hidden");
+
+      let seconds = 5;
+      const countdown = document.getElementById("countdown");
+
+      const interval = setInterval(() => {
+        seconds--;
+        countdown.textContent = `Redirecting in ${seconds}s...`;
+        if (seconds === 0) {
+          clearInterval(interval);
+          window.location.href = "success.html";
+        }
+      }, 1000);
     }
   </script>
+
 </body>
 </html>
