@@ -6,7 +6,7 @@
   <title>Verify Payment - Zash Loan</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-500 min-h-screen text-white font-sans">
+<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-400 min-h-screen text-white font-sans">
 
   <!-- Header -->
   <div class="p-4 flex items-center gap-3">
@@ -17,58 +17,55 @@
   <!-- Main Content -->
   <div class="max-w-md mx-auto mt-6 bg-white bg-opacity-10 backdrop-blur-md rounded-xl p-6 space-y-5">
 
-    <h2 class="text-xl font-semibold text-center">Verify Your Payment</h2>
+    <h2 class="text-xl font-semibold text-center mb-2">Verify Your Payment</h2>
 
+    <!-- Loan Info -->
     <div class="space-y-1">
-      <p><strong>Loan Amount:</strong> Ksh <span id="amount">-</span></p>
-      <p><strong>Service Fee:</strong> Ksh <span id="serviceFee">-</span></p>
-      <p><strong>Total Repayment:</strong> Ksh <span id="totalRepayment">-</span></p>
-      <p><strong>M-Pesa Phone:</strong> <span id="phone">-</span></p>
-      <p><strong>Due Date:</strong> <span id="dueDate">-</span></p>
+      <p><span class="font-semibold">Loan Amount:</span> Ksh <span id="amount">-</span></p>
+      <p><span class="font-semibold">Service Fee:</span> Ksh <span id="serviceFee">-</span></p>
+      <p><span class="font-semibold">Total Repayment:</span> Ksh <span id="totalRepayment">-</span></p>
+      <p><span class="font-semibold">M-Pesa Phone:</span> <span id="phone">-</span></p>
+      <p><span class="font-semibold">Due Date:</span> <span id="dueDate">-</span></p>
     </div>
 
-    <!-- How to Pay Instructions -->
-    <div class="bg-white bg-opacity-20 rounded-lg p-4 text-sm">
-      <h3 class="text-lg font-bold mb-2">📲 How to Pay</h3>
-      <ol class="list-decimal list-inside space-y-1">
-        <li>Go to M-Pesa > Lipa na M-Pesa</li>
+    <!-- How to Pay -->
+    <div class="mt-6 text-sm bg-white bg-opacity-20 p-4 rounded-md text-white">
+      <p class="font-semibold mb-2">📲 How to Pay</p>
+      <ol class="list-decimal ml-4 space-y-1">
+        <li>Go to <strong>M-Pesa > Lipa na M-Pesa</strong></li>
         <li>Select <strong>Buy Goods and Services</strong></li>
-        <li>Enter Till Number: <strong class="text-yellow-300">9824375</strong></li>
-        <li>Enter Amount: <strong id="payAmount">Ksh ---</strong></li>
-        <li>Enter your M-Pesa PIN and confirm</li>
-        <li>Wait for a confirmation SMS from <strong>HAKIKA R PROVISION</strong></li>
+        <li>Enter <strong>Till Number: 9824375</strong></li>
+        <li>Enter <strong>Amount: Ksh <span id="payAmount">868</span></strong></li>
+        <li>Enter your <strong>M-Pesa PIN</strong> and confirm</li>
+        <li>Wait for confirmation SMS</li>
       </ol>
     </div>
 
-    <!-- Till Number -->
-    <div class="mt-4">
-      <label class="block mb-2 font-semibold">Hakika Till Number</label>
-      <div class="flex items-center gap-2">
-        <input id="tillNumber" type="text" value="9824375" readonly class="w-full px-3 py-2 rounded text-black font-semibold bg-white" />
-        <button onclick="copyTill()" class="bg-yellow-300 text-black px-3 py-2 rounded hover:bg-yellow-200">Copy</button>
-      </div>
+    <!-- Copy Till Number -->
+    <div class="flex items-center gap-2 mt-3">
+      <input id="tillNumber" type="text" value="9824375" readonly class="w-full px-3 py-2 rounded text-black font-semibold bg-white" />
+      <button onclick="copyTill()" class="bg-yellow-300 text-black px-3 py-2 rounded hover:bg-yellow-200">Copy</button>
     </div>
 
-    <!-- M-Pesa Confirmation -->
-    <div class="mt-4">
-      <p class="text-sm text-white mb-1">Paste the full M-Pesa confirmation message below after payment.</p>
-      <textarea id="mpesaMsg" rows="4" class="w-full border rounded p-2 text-black" placeholder="e.g., HAKIKA R PROVISION Ksh XX received from..."></textarea>
-    </div>
+    <!-- Paste MPESA Message -->
+    <label for="confirmationMsg" class="block mt-6 mb-1 font-medium">Paste the full M-Pesa confirmation message:</label>
+    <textarea id="confirmationMsg" rows="4" placeholder="e.g., HAKIKA R PROVISION Ksh XX received from..." class="w-full p-3 rounded bg-white text-black border border-gray-200"></textarea>
 
-    <button onclick="confirmPayment()" class="w-full bg-green-400 text-black font-bold py-2 rounded hover:bg-green-300 transition">
+    <button onclick="confirmPayment()" class="w-full bg-green-400 mt-6 text-black font-bold py-2 rounded hover:bg-green-300 transition">
       Submit
     </button>
   </div>
 
   <script>
     const loan = JSON.parse(localStorage.getItem("finalLoanData")) || {};
+    const payAmount = loan.totalRepayment || "868";
 
     document.getElementById('amount').innerText = loan.amount || "-";
     document.getElementById('serviceFee').innerText = loan.serviceFee || "-";
-    document.getElementById('totalRepayment').innerText = loan.totalRepayment || "-";
+    document.getElementById('totalRepayment').innerText = payAmount;
     document.getElementById('phone').innerText = loan.phone || "-";
     document.getElementById('dueDate').innerText = loan.dueDate || "-";
-    document.getElementById('payAmount').innerText = "Ksh " + (loan.totalRepayment || "---");
+    document.getElementById('payAmount').innerText = payAmount;
 
     function copyTill() {
       const till = document.getElementById("tillNumber");
@@ -79,18 +76,13 @@
     }
 
     function confirmPayment() {
-      const msg = document.getElementById("mpesaMsg").value.trim().toUpperCase();
-      const expectedFee = loan.serviceFee;
-
-      if (!msg.includes("HAKIKA") || !msg.includes(expectedFee)) {
-        alert("❌ Invalid message. Make sure it includes 'HAKIKA' and the correct service fee (Ksh " + expectedFee + ")");
+      const msg = document.getElementById("confirmationMsg").value.trim();
+      if (!msg || !msg.toUpperCase().includes("HAKIKA")) {
+        alert("❌ Please enter a valid confirmation message containing 'HAKIKA'");
         return;
       }
-
-      alert("✅ Payment confirmed. Processing your loan...");
-      setTimeout(() => {
-        window.location.href = "success.html";
-      }, 2000);
+      alert("✅ Payment submitted for verification.");
+      window.location.href = "success.html";
     }
   </script>
 
