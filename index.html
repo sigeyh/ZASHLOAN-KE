@@ -9,22 +9,28 @@
     body {
       font-family: 'Poppins', sans-serif;
     }
+
     #loader {
       position: fixed;
       inset: 0;
-      background-color: #fff;
+      background-color: #ffffff;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 50;
     }
-    #loader img {
-      width: 100px;
-      margin-bottom: 1rem;
-    }
+
     #main-content {
       display: none;
+    }
+
+    /* Custom spin fallback for older browsers */
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .animate-spin {
+      animation: spin 1s linear infinite;
     }
   </style>
   <script>
@@ -40,8 +46,10 @@
 
   <!-- Loader Screen -->
   <div id="loader">
-    <img src="zashlogo.jpeg" alt="ZashLoan Logo">
-    <p class="text-blue-900 font-semibold text-lg">Please wait... Contacting servers</p>
+    <div class="relative w-24 h-24 flex items-center justify-center">
+      <div class="absolute w-24 h-24 border-4 border-blue-900 border-t-transparent rounded-full animate-spin"></div>
+      <img src="zashlogo.jpeg" alt="ZashLoan Logo" class="w-16 h-16 z-10" />
+    </div>
   </div>
 
   <!-- Main Content -->
@@ -115,6 +123,7 @@
     <footer class="bg-blue-900 text-white text-center py-4 mt-6">
       <p>&copy; 2025 ZashLoan. All rights reserved.</p>
     </footer>
+
   </div>
 </body>
 </html>
