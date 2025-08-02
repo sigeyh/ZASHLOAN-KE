@@ -1,98 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Loan Request - Zash Loan</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Select Your Loan - Zash Loan</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-500 text-white min-h-screen px-4 py-6 font-sans">
+<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-500 text-white font-sans min-h-screen px-4 py-6">
 
-  <!-- Header -->
+  <!-- Logo and Title -->
   <div class="flex items-center gap-3 mb-6">
     <img src="zashlogo.jpeg" alt="Zash Logo" class="w-12 h-12 rounded-full">
     <h1 class="text-2xl font-bold">Zash Loan</h1>
   </div>
 
-  <!-- Loan Info -->
+  <!-- Loan Limit Info -->
   <div class="bg-white bg-opacity-10 p-4 rounded-xl mb-6">
-    <h2 class="text-xl font-semibold mb-2">Loan Details</h2>
-    <p><strong>Loan Limit:</strong> Ksh <span id="loanLimit">-</span></p>
-
-    <label for="loanAmount" class="block mt-4">Select Loan Amount</label>
-    <input type="range" id="loanAmount" min="2500" max="12000" step="100" class="w-full mt-2">
-    <p class="mt-1">Amount: Ksh <span id="amountDisplay">-</span></p>
-
-    <label for="dueDate" class="block mt-4">Select Due Date</label>
-    <input type="date" id="dueDate" class="w-full mt-1 text-black rounded px-2 py-1">
-
-    <label for="phone" class="block mt-4">M-Pesa Number</label>
-    <input type="tel" id="phone" placeholder="07XXXXXXXX" class="w-full mt-1 text-black rounded px-2 py-1">
+    <p>Loan limit: <span id="loanLimit" class="font-bold">-</span></p>
+    <p>Request date: <span id="reqDate">-</span></p>
+    <p>Due date: <span id="dueDate">-</span></p>
   </div>
 
-  <!-- Loader -->
-  <div id="loader" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-    <div class="text-center">
-      <svg class="animate-spin h-10 w-10 text-white mx-auto mb-4" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-      </svg>
-      <p class="text-white text-lg font-medium">Processing your request...</p>
-    </div>
+  <!-- Loan Amount Selection -->
+  <div class="bg-white bg-opacity-10 p-6 rounded-xl mb-6">
+    <label class="block text-lg mb-2 font-semibold">Loan Amount</label>
+    <input type="range" id="amountSlider" min="0" max="10000" step="100" class="w-full mb-2">
+    <p class="text-lg">Selected Amount: <span id="selectedAmount" class="font-bold text-yellow-300">Ksh 0</span></p>
+    <p>Service Fee (6.2%): <span id="serviceFee">Ksh 0</span></p>
+  </div>
+
+  <!-- Details Form -->
+  <div class="bg-white bg-opacity-10 p-6 rounded-xl mb-6">
+    <label class="block mb-2">M-Pesa Phone Number</label>
+    <input type="tel" id="phone" placeholder="e.g. 0712345678" class="w-full p-2 rounded text-black mb-4" required>
+
+    <label class="block mb-2">Promo Code (Optional)</label>
+    <input type="text" id="promo" placeholder="Enter code" class="w-full p-2 rounded text-black">
   </div>
 
   <!-- Continue Button -->
-  <button onclick="continueLoan()" class="w-full bg-yellow-400 text-black font-bold py-3 rounded-full hover:bg-yellow-300 shadow-lg">Continue</button>
+  <button onclick="proceed()" class="w-full bg-yellow-400 text-black font-bold py-3 rounded-full hover:bg-yellow-300 shadow-lg">Continue</button>
 
   <script>
-    const data = JSON.parse(localStorage.getItem("loanRequest")) || {};
-    const loanLimit = data.loanLimit || Math.floor(Math.random() * (12000 - 2500 + 1)) + 2500;
+    // Load from localStorage
+    const data = JSON.parse(localStorage.getItem('loanLimitData')) || {};
+    const loanLimit = data.limit || 10000;
+    const requestDate = data.date || '';
+    const dueDate = data.dueDate || '';
 
-    document.getElementById("loanLimit").textContent = loanLimit.toLocaleString();
-    const amountInput = document.getElementById("loanAmount");
-    const amountDisplay = document.getElementById("amountDisplay");
+    document.getElementById('loanLimit').textContent = `Ksh ${loanLimit.toLocaleString()}`;
+    document.getElementById('reqDate').textContent = requestDate;
+    document.getElementById('dueDate').textContent = dueDate;
 
-    amountInput.value = loanLimit;
-    amountDisplay.textContent = loanLimit.toLocaleString();
+    const slider = document.getElementById('amountSlider');
+    const selectedAmount = document.getElementById('selectedAmount');
+    const serviceFee = document.getElementById('serviceFee');
 
-    amountInput.addEventListener("input", () => {
-      amountDisplay.textContent = amountInput.value;
-    });
+    slider.max = loanLimit;
+    slider.value = loanLimit / 2;
 
-    function calculateServiceFee(amount) {
-      return Math.ceil(amount * 0.062); // 6.2% fee
+    function updateLoanInfo() {
+      const amount = parseInt(slider.value);
+      const fee = Math.round(amount * 0.062);
+
+      selectedAmount.textContent = `Ksh ${amount.toLocaleString()}`;
+      serviceFee.textContent = `Ksh ${fee.toLocaleString()}`;
     }
 
-    function continueLoan() {
-      const amount = parseInt(amountInput.value);
-      const phone = document.getElementById("phone").value.trim();
-      const dueDate = document.getElementById("dueDate").value;
+    slider.addEventListener('input', updateLoanInfo);
+    updateLoanInfo(); // initial update
 
-      if (!phone || !dueDate) {
-        alert("Please fill in all the fields.");
+    function proceed() {
+      const loanAmount = parseInt(slider.value);
+      const fee = Math.round(loanAmount * 0.062);
+      const phone = document.getElementById('phone').value;
+      const promo = document.getElementById('promo').value;
+
+      if (!phone || phone.length < 10) {
+        alert('Please enter a valid M-Pesa number.');
         return;
       }
 
-      const serviceFee = calculateServiceFee(amount);
-      const today = new Date().toISOString().split("T")[0];
-
       const loanData = {
-        amount,
-        serviceFee,
-        dueDate,
-        requestDate: today,
+        fullName: "John Mwangi", // Placeholder: Replace with actual user name if available
+        limit: loanLimit,
+        amount: loanAmount,
+        serviceFee: fee,
         phone,
-        loanLimit
+        promo,
+        requestDate,
+        dueDate
       };
 
-      localStorage.setItem("loanRequest", JSON.stringify(loanData));
-
-      // Show loader and redirect after 3 seconds
-      document.getElementById("loader").classList.remove("hidden");
-      setTimeout(() => {
-        window.location.href = "verification.html";
-      }, 3000);
+      localStorage.setItem('loanRequest', JSON.stringify(loanData));
+      window.location.href = "verification.html";
     }
   </script>
+
 </body>
 </html>
