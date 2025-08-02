@@ -3,189 +3,75 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Zash Loan - Loan Limit</title>
+  <title>Zash Loan - Payment Verification</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-    }
-  </style>
 </head>
-<body class="bg-white text-gray-800">
+<body class="bg-white text-gray-800 font-sans min-h-screen">
 
-<!-- Loader Screen -->
-<div id="loaderScreen" class="flex flex-col items-center justify-center min-h-screen bg-white p-4">
-  <img src="zash-logo.jpeg" alt="Zash Loan" class="w-16 h-16 mb-6">
-  <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-red-600 border-opacity-50"></div>
-  <p class="text-lg font-medium text-gray-700 mt-4">Processing...</p>
-</div>
-
-<!-- Submit Processing Loader -->
-<div id="submitLoader" class="hidden fixed inset-0 bg-white bg-opacity-90 flex flex-col items-center justify-center z-50">
-  <img src="zashlogo.jpeg" alt="Zash Loan" class="w-14 h-14 mb-3">
-  <p class="text-lg font-semibold text-red-600">Submitting your request...</p>
-  <div class="mt-4 w-48 bg-gray-200 h-2 rounded-full">
-    <div class="bg-red-600 h-2 rounded-full animate-pulse w-full"></div>
-  </div>
-</div>
-
-<!-- Main Loan Page -->
-<div id="mainContent" class="hidden">
   <!-- Header -->
-  <div class="flex items-center justify-between p-4 shadow-md bg-red-600 text-white">
-    <img src="zashlogo.jpeg" alt="Zash Loan" class="w-10 h-10">
-    <h1 class="text-lg font-semibold">Loan Application</h1>
+  <div class="flex items-center justify-between p-4 border-b shadow">
+    <img src="zash-logo.jpeg" alt="Zash Logo" class="w-12 h-12 rounded-full" />
+    <h2 class="text-xl font-semibold text-red-600">Payment Verification</h2>
+    <div></div>
   </div>
 
-  <!-- Loan Limit Section -->
-  <div class="p-6 max-w-lg mx-auto">
-    <h2 class="text-lg font-semibold mb-2">Select Loan Amount</h2>
-    <input type="range" id="loanSlider" min="1500" max="15000" step="500" class="w-full accent-red-600">
-    <p class="text-sm text-gray-600 mt-1">Loan Amount: <span id="loanAmount" class="font-bold text-red-600">KSH 1500</span></p>
-
-    <!-- Promo Code -->
-    <div class="mt-4">
-      <label class="block font-medium">Promo Code</label>
-      <div class="flex">
-        <input type="text" id="promoCode" placeholder="Enter code" class="w-full border border-gray-300 px-3 py-2 rounded-l focus:outline-none">
-        <button onclick="applyPromo()" class="bg-red-600 text-white px-4 rounded-r hover:bg-red-700">Apply</button>
-      </div>
-      <p id="promoMsg" class="text-sm text-green-600 mt-1 hidden">Promo applied!</p>
+  <!-- User Info -->
+  <div class="p-6 max-w-lg mx-auto space-y-4">
+    <div class="text-center">
+      <h3 class="text-lg font-bold text-gray-700">Hi, <span id="userName">Loading...</span></h3>
+      <p>Loan Amount: <span class="font-semibold text-green-700" id="loanAmount">Ksh 0</span></p>
+      <p>Service Fee: <span class="text-red-600 font-semibold" id="serviceFee">Ksh 0</span></p>
     </div>
 
-    <!-- M-Pesa Phone Number -->
-    <div class="mt-4">
-      <label class="block font-medium">Transfer to M-Pesa</label>
-      <input type="tel" id="mpesaNumber" placeholder="07XXXXXXXX" class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none">
+    <!-- How to Pay -->
+    <div class="bg-gray-100 p-4 rounded">
+      <h4 class="font-semibold mb-2 text-red-500">How to Pay</h4>
+      <ol class="list-decimal pl-5 text-sm text-gray-700 space-y-1">
+        <li>Go to M-Pesa > Lipa na M-Pesa > Paybill</li>
+        <li>Enter Paybill Number: <strong>123456</strong></li>
+        <li>Account Number: <strong>Your National ID</strong></li>
+        <li>Enter Amount: <strong>Loan Service Fee</strong></li>
+        <li>Enter M-Pesa PIN and press OK</li>
+      </ol>
     </div>
 
-    <!-- Loan Duration -->
-    <div class="mt-4">
-      <label class="block font-medium">Loan Duration (Days)</label>
-      <input type="range" id="daysSlider" min="5" max="15" step="1" class="w-full accent-red-600">
-      <p class="text-sm mt-1">Due in <span id="loanDays" class="font-semibold text-red-600">5</span> days</p>
-    </div>
-
-    <!-- Loan Summary -->
-    <div class="mt-6 border-t pt-4">
-      <h3 class="text-md font-semibold mb-2">Loan Summary</h3>
-      <div class="text-sm mb-3"><strong>Applicant:</strong> <span id="fullName" class="text-red-600"></span></div>
-      <div class="grid grid-cols-2 gap-2 text-sm">
-        <div>Loan Amount:</div><div id="summaryAmount">KSH 1500</div>
-        <div>Interest (10%):</div><div id="interest">KSH 150</div>
-        <div>Service Fee (6.2%):</div><div id="serviceFee">KSH 93</div>
-        <div class="font-bold">Total Owed:</div><div id="totalOwed" class="font-bold">KSH 1743</div>
-      </div>
-    </div>
-
-    <!-- Continue Button -->
-    <button onclick="submitLoan()" class="mt-6 w-full bg-red-600 text-white py-2 rounded hover:bg-red-700">
-      Continue
+    <button onclick="sendMpesaRequest()" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 mt-4">
+      Pay via M-Pesa (STK Push)
     </button>
   </div>
 
-  <!-- Footer -->
-  <footer class="mt-10 py-4 bg-red-600 text-white text-center text-sm">
-    <p>Need help? Call <strong>0701-201-0001</strong> or email <strong>support@zashloan.co.ke</strong></p>
-    <p class="mt-1">© 2025 Zash Loan. All rights reserved.</p>
-  </footer>
-</div>
+  <script>
+    // Load data from localStorage
+    const signup = JSON.parse(localStorage.getItem("signupData")) || {};
+    const loan = JSON.parse(localStorage.getItem("loanData")) || {};
 
-<script>
-  const loader = document.getElementById('loaderScreen');
-  const mainContent = document.getElementById('mainContent');
-  const submitLoader = document.getElementById('submitLoader');
-  const fullNameEl = document.getElementById('fullName');
+    document.getElementById("userName").innerText = `${signup.firstName || ''} ${signup.lastName || ''}`;
+    document.getElementById("loanAmount").innerText = `Ksh ${loan.amount || '0'}`;
+    document.getElementById("serviceFee").innerText = `Ksh ${loan.serviceFee || '0'}`;
 
-  const randomLoanLimit = Math.floor(Math.random() * ((15000 - 1500) / 500 + 1)) * 500 + 1500;
-  localStorage.setItem('randomLoanLimit', randomLoanLimit);
-
-  setTimeout(() => {
-    loader.classList.add('hidden');
-    mainContent.classList.remove('hidden');
-    slider.value = randomLoanLimit;
-    updateLoanDetails(randomLoanLimit);
-    loadFullName();
-  }, 3000);
-
-  const slider = document.getElementById('loanSlider');
-  const daysSlider = document.getElementById('daysSlider');
-  const loanAmountText = document.getElementById('loanAmount');
-  const summaryAmount = document.getElementById('summaryAmount');
-  const interestEl = document.getElementById('interest');
-  const serviceFeeEl = document.getElementById('serviceFee');
-  const totalOwedEl = document.getElementById('totalOwed');
-  const promoMsg = document.getElementById('promoMsg');
-  const loanDays = document.getElementById('loanDays');
-
-  function updateLoanDetails(value) {
-    const loan = parseInt(value);
-    const interest = Math.floor(loan * 0.10);
-    const serviceFee = Math.floor(loan * 0.062);
-    const total = loan + interest + serviceFee;
-
-    loanAmountText.textContent = `KSH ${loan}`;
-    summaryAmount.textContent = `KSH ${loan}`;
-    interestEl.textContent = `KSH ${interest}`;
-    serviceFeeEl.textContent = `KSH ${serviceFee}`;
-    totalOwedEl.textContent = `KSH ${total}`;
-  }
-
-  function applyPromo() {
-    const promo = document.getElementById('promoCode').value.trim();
-    const loan = parseInt(slider.value);
-    const interest = Math.floor(loan * 0.10);
-    const serviceFee = Math.floor(loan * 0.062);
-    let total = loan + interest + serviceFee;
-
-    if (promo.toLowerCase() === 'zash2024') {
-      promoMsg.classList.remove('hidden');
-      promoMsg.textContent = "Promo applied! You got 100 off.";
-      total -= 100;
-      localStorage.setItem('promoCode', promo);
+    function sendMpesaRequest() {
+      alert("STK Push would be triggered here using M-Pesa API. (Demo only)");
+      
+      // Ideally: Use Fetch to send phone and amount to a secure backend
+      /*
+      fetch("https://your-backend-server.com/pay", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          phone: loan.phone,
+          amount: loan.serviceFee,
+          account: signup.idNumber
+        })
+      }).then(res => res.json()).then(data => {
+        alert("Payment initiated successfully.");
+      }).catch(err => {
+        console.error(err);
+        alert("Payment failed. Try again.");
+      });
+      */
     }
-
-    totalOwedEl.textContent = `KSH ${total}`;
-    localStorage.setItem('serviceFee', serviceFee); // Ensures it's stored even if promo is applied
-  }
-
-  function submitLoan() {
-    const loan = parseInt(slider.value);
-    const interest = Math.floor(loan * 0.10);
-    const serviceFee = Math.floor(loan * 0.062);
-    const total = loan + interest + serviceFee;
-    const mpesaNumber = document.getElementById('mpesaNumber').value;
-    const days = parseInt(daysSlider.value);
-    const promo = document.getElementById('promoCode').value.trim();
-
-    localStorage.setItem('loanAmount', loan);
-    localStorage.setItem('interest', interest);
-    localStorage.setItem('serviceFee', serviceFee);
-    localStorage.setItem('totalOwed', total);
-    localStorage.setItem('mpesaNumber', mpesaNumber);
-    localStorage.setItem('loanDays', days);
-    localStorage.setItem('promoCode', promo);
-
-    submitLoader.classList.remove('hidden');
-
-    setTimeout(() => {
-      window.location.href = 'verification.html';
-    }, 2500);
-  }
-
-  function loadFullName() {
-    const data = JSON.parse(localStorage.getItem('signupData') || '{}');
-    const fullName = `${data.firstName || ''} ${data.middleName || ''} ${data.lastName || ''}`.trim();
-    fullNameEl.textContent = fullName || 'N/A';
-  }
-
-  slider.addEventListener('input', () => updateLoanDetails(slider.value));
-  daysSlider.addEventListener('input', () => {
-    loanDays.textContent = daysSlider.value;
-  });
-
-  loanDays.textContent = daysSlider.value;
-</script>
-
+  </script>
 </body>
 </html>
