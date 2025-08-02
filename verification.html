@@ -54,12 +54,14 @@
   <script>
     const data = JSON.parse(localStorage.getItem("finalLoanData")) || {};
 
-    document.getElementById("loanAmount").textContent = data.amount?.toLocaleString() || "0";
-    document.getElementById("serviceFee").textContent = data.serviceFee?.toLocaleString() || "0";
-    document.getElementById("totalRepayment").textContent = data.totalRepayment?.toLocaleString() || "0";
+    const format = (n) => n ? parseInt(n).toLocaleString() : "0";
+
+    document.getElementById("loanAmount").textContent = format(data.amount);
+    document.getElementById("serviceFee").textContent = format(data.serviceFee);
+    document.getElementById("totalRepayment").textContent = format(data.totalRepayment);
     document.getElementById("phone").textContent = data.phone || "N/A";
     document.getElementById("dueDate").textContent = data.dueDate || "N/A";
-    document.getElementById("serviceFeeOnly").textContent = data.serviceFee?.toLocaleString() || "0";
+    document.getElementById("serviceFeeOnly").textContent = format(data.serviceFee);
 
     function copyTill() {
       navigator.clipboard.writeText("9824375");
