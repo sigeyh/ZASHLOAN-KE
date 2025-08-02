@@ -14,12 +14,10 @@
     <h1 class="text-2xl font-bold">Zash Loan</h1>
   </div>
 
-  <!-- Main Content -->
+  <!-- Main Loan Info -->
   <div class="max-w-md mx-auto mt-6 bg-white bg-opacity-10 backdrop-blur-md rounded-xl p-6 space-y-5">
+    <h2 class="text-xl font-semibold text-center mb-2">Loan Details</h2>
 
-    <h2 class="text-xl font-semibold text-center mb-2">Verify Your Payment</h2>
-
-    <!-- Loan Info -->
     <div class="space-y-1">
       <p><span class="font-semibold">Loan Amount:</span> Ksh <span id="amount">-</span></p>
       <p><span class="font-semibold">Service Fee:</span> Ksh <span id="serviceFee">-</span></p>
@@ -28,65 +26,81 @@
       <p><span class="font-semibold">Due Date:</span> <span id="dueDate">-</span></p>
     </div>
 
-    <!-- How to Pay -->
-    <div class="mt-6 text-sm bg-white bg-opacity-20 p-4 rounded-md text-white">
-      <p class="font-semibold mb-2">📲 How to Pay</p>
-      <ol class="list-decimal ml-4 space-y-1">
-        <li>Go to <strong>M-Pesa > Lipa na M-Pesa</strong></li>
-        <li>Select <strong>Buy Goods and Services</strong></li>
-        <li>Enter <strong>Till Number: 9824375</strong></li>
-        <li>Enter <strong>Amount: Ksh <span id="payAmount">-</span></strong></li>
-        <li>Enter your <strong>M-Pesa PIN</strong> and confirm</li>
-        <li>Wait for confirmation SMS</li>
-      </ol>
-    </div>
-
-    <!-- Copy Till Number -->
-    <div class="flex items-center gap-2 mt-3">
-      <input id="tillNumber" type="text" value="9824375" readonly class="w-full px-3 py-2 rounded text-black font-semibold bg-white" />
-      <button onclick="copyTill()" class="bg-yellow-300 text-black px-3 py-2 rounded hover:bg-yellow-200">Copy</button>
-    </div>
-
-    <!-- Paste MPESA Message -->
-    <label for="confirmationMsg" class="block mt-6 mb-1 font-medium">Paste the full M-Pesa confirmation message:</label>
-    <textarea id="confirmationMsg" rows="4" placeholder="e.g., HAKIKA R PROVISION Ksh XX received from..." class="w-full p-3 rounded bg-white text-black border border-gray-200"></textarea>
-
-    <button onclick="confirmPayment()" class="w-full bg-green-400 mt-6 text-black font-bold py-2 rounded hover:bg-green-300 transition">
-      Submit
+    <button onclick="openModal()" class="w-full mt-6 bg-yellow-300 text-black font-bold py-2 rounded hover:bg-yellow-200 transition">
+      Pay Now
     </button>
+  </div>
+
+  <!-- Modal Background -->
+  <div id="modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+    <div class="bg-white text-black rounded-xl max-w-md w-full p-6 relative">
+      <button onclick="closeModal()" class="absolute top-2 right-3 text-lg font-bold text-red-500">&times;</button>
+
+      <h3 class="text-xl font-semibold text-center mb-4 text-red-700">Complete Payment</h3>
+
+      <!-- Payment Instructions -->
+      <div class="text-sm mb-4">
+        <p class="font-semibold mb-2">📲 How to Pay</p>
+        <ol class="list-decimal ml-4 space-y-1">
+          <li>Go to <strong>M-Pesa > Lipa na M-Pesa</strong></li>
+          <li>Select <strong>Buy Goods and Services</strong></li>
+          <li>Enter <strong>Till Number: 9824375</strong></li>
+          <li>Enter <strong>Amount: Ksh <span id="payAmount">-</span></strong></li>
+          <li>Enter your <strong>M-Pesa PIN</strong> and confirm</li>
+          <li>Wait for confirmation SMS</li>
+        </ol>
+      </div>
+
+      <!-- Copy Till -->
+      <div class="flex items-center gap-2 mb-4">
+        <input id="tillNumber" type="text" value="9824375" readonly class="w-full px-3 py-2 rounded text-black font-semibold border"/>
+        <button onclick="copyTill()" class="bg-yellow-300 text-black px-3 py-2 rounded hover:bg-yellow-200">Copy</button>
+      </div>
+
+      <!-- Confirmation Msg -->
+      <label for="confirmationMsg" class="block font-medium mb-1">Paste M-Pesa Confirmation:</label>
+      <textarea id="confirmationMsg" rows="3" placeholder="e.g., HAKIKA R PROVISION Ksh XX received..." class="w-full p-3 rounded border mb-4"></textarea>
+
+      <button onclick="confirmPayment()" class="w-full bg-green-400 text-black font-bold py-2 rounded hover:bg-green-300 transition">
+        Submit
+      </button>
+    </div>
   </div>
 
   <script>
     const loan = JSON.parse(localStorage.getItem("finalLoanData")) || {};
-
     const amount = loan.amount || "-";
     const serviceFee = loan.serviceFee || "-";
     const totalRepayment = loan.totalRepayment || "-";
     const phone = loan.phone || "-";
     const dueDate = loan.dueDate || "-";
 
-    // Display values
     document.getElementById('amount').innerText = amount;
     document.getElementById('serviceFee').innerText = serviceFee;
     document.getElementById('totalRepayment').innerText = totalRepayment;
     document.getElementById('phone').innerText = phone;
     document.getElementById('dueDate').innerText = dueDate;
-
-    // Set pay amount = service fee
     document.getElementById('payAmount').innerText = serviceFee;
+
+    function openModal() {
+      document.getElementById("modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("modal").classList.add("hidden");
+    }
 
     function copyTill() {
       const till = document.getElementById("tillNumber");
       till.select();
-      till.setSelectionRange(0, 99999);
       document.execCommand("copy");
-      alert("Till number copied: " + till.value);
+      alert("Till number copied!");
     }
 
     function confirmPayment() {
       const msg = document.getElementById("confirmationMsg").value.trim();
       if (!msg || !msg.toUpperCase().includes("HAKIKA")) {
-        alert("❌ Please enter a valid confirmation message containing 'HAKIKA'");
+        alert("❌ Please enter a valid confirmation message including 'HAKIKA'");
         return;
       }
       alert("✅ Payment submitted for verification.");
