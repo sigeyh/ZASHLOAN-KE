@@ -5,47 +5,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Verify Payment - Zash Loan</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .loader {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #e11d48;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body class="bg-gradient-to-br from-red-700 via-red-600 to-red-400 min-h-screen text-white font-sans">
 
-  <!-- Header -->
-  <div class="p-4 flex items-center gap-3">
-    <img src="zashlogo.jpeg" alt="Zash Logo" class="w-12 h-12 rounded-full object-cover"/>
-    <h1 class="text-2xl font-bold">Zash Loan</h1>
+  <!-- LOADER -->
+  <div id="loaderScreen" class="fixed inset-0 flex items-center justify-center bg-white z-50">
+    <div class="text-center">
+      <div class="loader mx-auto mb-4"></div>
+      <p class="text-gray-700 font-medium">Preparing your loan details...</p>
+    </div>
   </div>
 
-  <!-- Main Loan Section -->
-  <div class="max-w-md mx-auto mt-4 bg-white bg-opacity-10 backdrop-blur-md rounded-xl p-6 space-y-5">
-    <h2 class="text-xl font-semibold text-center mb-2">Hi, <span id="fullName">User</span></h2>
-
-    <p class="text-center text-sm bg-yellow-200 text-black px-4 py-2 rounded font-medium">
-      🎉 Your loan has been approved! To receive your funds, please complete the M-Pesa payment below.
-    </p>
-
-    <div class="mt-4 space-y-1 text-sm">
-      <p><span class="font-semibold">Loan Amount:</span> Ksh <span id="amount">-</span></p>
-      <p><span class="font-semibold">Service Fee:</span> Ksh <span id="serviceFee">-</span></p>
-      <p><span class="font-semibold">Total Repayment:</span> Ksh <span id="totalRepayment">-</span></p>
-      <p><span class="font-semibold">Phone Number:</span> <span id="phone">-</span></p>
-      <p><span class="font-semibold">Due Date:</span> <span id="dueDate">-</span></p>
+  <!-- Main Content -->
+  <div id="mainContent" class="hidden">
+    <!-- Header -->
+    <div class="p-4 flex items-center gap-3">
+      <img src="zashlogo.jpeg" alt="Zash Logo" class="w-12 h-12 rounded-full object-cover"/>
+      <h1 class="text-2xl font-bold">Zash Loan</h1>
     </div>
 
-    <button onclick="openModal()" class="w-full mt-6 bg-yellow-300 text-black font-bold py-2 rounded hover:bg-yellow-200 transition">
-      Pay Now to Receive Loan
-    </button>
+    <!-- Main Loan Section -->
+    <div class="max-w-md mx-auto mt-4 bg-white bg-opacity-10 backdrop-blur-md rounded-xl p-6 space-y-5">
+      <h2 class="text-xl font-semibold text-center mb-2">Hi, <span id="fullName">User</span></h2>
+
+      <p class="text-center text-base bg-yellow-200 text-black px-4 py-2 rounded font-semibold leading-6">
+        🎉 Great news! Your loan is approved.<br/>
+        To unlock your funds instantly, kindly complete the payment below.
+      </p>
+
+      <div class="mt-4 space-y-1 text-sm">
+        <p><span class="font-semibold">Loan Amount:</span> Ksh <span id="amount">-</span></p>
+        <p><span class="font-semibold">Service Fee:</span> Ksh <span id="serviceFee">-</span></p>
+        <p><span class="font-semibold">Total Repayment:</span> Ksh <span id="totalRepayment">-</span></p>
+        <p><span class="font-semibold">Phone Number:</span> <span id="phone">-</span></p>
+        <p><span class="font-semibold">Due Date:</span> <span id="dueDate">-</span></p>
+      </div>
+
+      <button onclick="openModal()" class="w-full mt-6 bg-yellow-300 text-black font-bold py-2 rounded hover:bg-yellow-200 transition">
+        Pay Now to Receive Loan
+      </button>
+    </div>
   </div>
 
   <!-- Modal Background -->
   <div id="modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-    <div class="bg-white text-black rounded-xl max-w-md w-full p-6 relative">
-      <button onclick="closeModal()" class="absolute top-2 right-3 text-lg font-bold text-red-500">&times;</button>
+    <div class="bg-gradient-to-br from-red-800 via-red-600 to-red-500 text-white rounded-xl max-w-md w-full p-6 relative">
+      <button onclick="closeModal()" class="absolute top-2 right-3 text-2xl font-bold text-white">&times;</button>
 
-      <h3 class="text-xl font-semibold text-center mb-4 text-red-700">Complete Payment</h3>
+      <h3 class="text-xl font-semibold text-center mb-4">Complete Your Payment</h3>
 
       <!-- Payment Instructions -->
       <div class="text-sm mb-4">
         <p class="font-semibold mb-2">📲 How to Pay</p>
-        <ol class="list-decimal ml-4 space-y-1">
+        <ol class="list-decimal ml-4 space-y-1 text-white">
           <li>Go to <strong>M-Pesa > Lipa na M-Pesa</strong></li>
           <li>Select <strong>Buy Goods and Services</strong></li>
           <li>Enter <strong>Till Number: 9824375</strong></li>
@@ -57,13 +84,13 @@
 
       <!-- Copy Till -->
       <div class="flex items-center gap-2 mb-4">
-        <input id="tillNumber" type="text" value="9824375" readonly class="w-full px-3 py-2 rounded text-black font-semibold border"/>
+        <input id="tillNumber" type="text" value="9824375" readonly class="w-full px-3 py-2 rounded text-black font-semibold"/>
         <button onclick="copyTill()" class="bg-yellow-300 text-black px-3 py-2 rounded hover:bg-yellow-200">Copy</button>
       </div>
 
       <!-- Confirmation Msg -->
-      <label for="confirmationMsg" class="block font-medium mb-1">Paste M-Pesa Confirmation:</label>
-      <textarea id="confirmationMsg" rows="3" placeholder="e.g., HAKIKA R PROVISION Ksh XX received..." class="w-full p-3 rounded border mb-4"></textarea>
+      <label for="confirmationMsg" class="block font-medium mb-1 text-white">Paste M-Pesa Confirmation:</label>
+      <textarea id="confirmationMsg" rows="3" placeholder="e.g., HAKIKA R PROVISION Ksh XX received..." class="w-full p-3 rounded border text-black mb-4"></textarea>
 
       <button onclick="confirmPayment()" class="w-full bg-green-400 text-black font-bold py-2 rounded hover:bg-green-300 transition">
         Submit
@@ -76,13 +103,20 @@
     const user = JSON.parse(localStorage.getItem("signupData")) || {};
 
     document.getElementById('fullName').innerText = user.fullname || "User";
-
     document.getElementById('amount').innerText = loan.amount || "-";
     document.getElementById('serviceFee').innerText = loan.serviceFee || "-";
     document.getElementById('totalRepayment').innerText = loan.totalRepayment || "-";
     document.getElementById('phone').innerText = loan.phone || "-";
     document.getElementById('dueDate').innerText = loan.dueDate || "-";
     document.getElementById('payAmount').innerText = loan.serviceFee || "-";
+
+    // Loader timeout
+    window.onload = () => {
+      setTimeout(() => {
+        document.getElementById("loaderScreen").style.display = "none";
+        document.getElementById("mainContent").classList.remove("hidden");
+      }, 3000);
+    };
 
     function openModal() {
       document.getElementById("modal").classList.remove("hidden");
@@ -105,10 +139,9 @@
         alert("❌ Please enter a valid confirmation message including 'HAKIKA'");
         return;
       }
-      alert("✅ Payment submitted for verification.");
+      alert("✅ Payment submitted successfully.");
       window.location.href = "success.html";
     }
   </script>
-
 </body>
 </html>
