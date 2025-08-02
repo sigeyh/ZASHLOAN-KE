@@ -3,78 +3,86 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Zash Loan - Payment Verification</title>
+  <title>Check Loan Limit - Zash Loan</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #dc2626;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+  </style>
 </head>
-<body class="bg-white text-gray-800 font-sans min-h-screen">
+<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-400 min-h-screen text-white font-sans">
 
-  <!-- Header -->
-  <div class="flex items-center justify-start gap-4 p-4 border-b shadow">
-    <img src="zashlogo.jpeg" alt="Zash Logo" class="w-12 h-12 rounded-full object-cover" />
-    <h2 class="text-xl font-semibold text-red-600">Payment Verification</h2>
+  <!-- Logo -->
+  <div class="p-4 flex items-center gap-3">
+    <img src="zashlogo.jpeg" alt="Zash Logo" class="w-12 h-12 rounded-full object-cover"/>
+    <h1 class="text-2xl font-bold">Zash Loan</h1>
   </div>
 
   <!-- Main Content -->
-  <div class="p-6 max-w-xl mx-auto space-y-6">
+  <div class="flex flex-col items-center justify-center min-h-[60vh] text-center px-6">
 
-    <!-- Borrower Details -->
-    <div class="bg-gray-100 p-4 rounded shadow-md space-y-2">
-      <h3 class="text-lg font-bold text-gray-700">Hello, <span id="userName">Loading...</span></h3>
-      <p class="text-sm text-gray-800">Loan Amount: <span id="loanAmount" class="font-semibold text-green-700">Ksh 0</span></p>
-      <p class="text-sm text-gray-800">Service Fee: <span id="serviceFee" class="font-semibold text-red-600">Ksh 0</span></p>
+    <!-- Loader -->
+    <div id="loadingSection" class="flex flex-col items-center">
+      <div class="spinner mb-4"></div>
+      <p class="text-lg">Contacting server, please wait...</p>
     </div>
 
-    <!-- How to Pay -->
-    <div class="bg-white p-4 border rounded shadow">
-      <h4 class="font-semibold mb-2 text-red-500">How to Pay via M-Pesa</h4>
-      <ol class="list-decimal pl-5 text-sm text-gray-700 space-y-1">
-        <li>Go to <strong>M-Pesa > Lipa na M-Pesa > Paybill</strong></li>
-        <li>Enter Paybill Number: <strong>123456</strong></li>
-        <li>Enter Account Number: <strong>Your National ID</strong></li>
-        <li>Enter Amount: <strong>Same as Service Fee</strong></li>
-        <li>Enter M-Pesa PIN and press OK</li>
-      </ol>
+    <!-- Result Section -->
+    <div id="resultSection" class="hidden space-y-4">
+      <h2 class="text-2xl font-bold">Hi <span id="userName">...</span>,</h2>
+      <p class="text-lg">Your loan limit has been calculated.</p>
+      <p class="text-xl font-bold">You qualify for up to:</p>
+      <p class="text-3xl font-extrabold text-yellow-300">Ksh <span id="loanLimit">0</span></p>
+      <p class="text-sm">A 6.2% service fee will apply</p>
     </div>
-
-    <!-- Payment Trigger -->
-    <button onclick="sendMpesaRequest()" class="w-full bg-green-600 text-white py-3 rounded-lg text-lg hover:bg-green-700 transition">
-      Pay via M-Pesa (STK Push)
-    </button>
 
   </div>
 
   <script>
-    // Load user and loan data
-    const signup = JSON.parse(localStorage.getItem("signupData")) || {};
-    const loan = JSON.parse(localStorage.getItem("loanData")) || {};
+    // Simulate delay
+    const loadingSection = document.getElementById("loadingSection");
+    const resultSection = document.getElementById("resultSection");
+    const userName = document.getElementById("userName");
+    const loanLimitEl = document.getElementById("loanLimit");
 
-    document.getElementById("userName").innerText = `${signup.firstName || ''} ${signup.lastName || ''}`;
-    document.getElementById("loanAmount").innerText = `Ksh ${loan.amount || '0'}`;
-    document.getElementById("serviceFee").innerText = `Ksh ${loan.serviceFee || '0'}`;
+    // Get user info from localStorage
+    const signupData = JSON.parse(localStorage.getItem("signupData")) || {};
+    userName.innerText = signupData.firstName || "User";
 
-    function sendMpesaRequest() {
-      alert("STK Push would be triggered here using M-Pesa API. (Demo only)");
+    // Generate random loan amount between 1540 and 3500
+    const loanAmount = Math.floor(Math.random() * (3500 - 1540 + 1)) + 1540;
+    const serviceFee = Math.round(loanAmount * 0.062);
 
-      // Uncomment and configure below for live backend
-      /*
-      fetch("https://your-backend-server.com/pay", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          phone: loan.phone,
-          amount: loan.serviceFee,
-          account: signup.idNumber
-        })
-      }).then(res => res.json()).then(data => {
-        alert("Payment initiated successfully.");
-      }).catch(err => {
-        console.error(err);
-        alert("Payment failed. Try again.");
-      });
-      */
-    }
+    // Save to localStorage
+    const loanData = {
+      amount: loanAmount,
+      serviceFee: serviceFee,
+      phone: signupData.phone || "",
+    };
+    localStorage.setItem("loanData", JSON.stringify(loanData));
+
+    // Simulate server delay
+    setTimeout(() => {
+      loadingSection.classList.add("hidden");
+      loanLimitEl.innerText = loanAmount;
+      resultSection.classList.remove("hidden");
+
+      // After another 5 seconds, go to next page
+      setTimeout(() => {
+        window.location.href = "loan.html";
+      }, 5000);
+    }, 5000);
   </script>
+
 </body>
 </html>
