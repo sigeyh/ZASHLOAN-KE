@@ -104,12 +104,10 @@
 
   <script>
     function saveSignupInfo() {
-      // Show loader
       document.getElementById("loader").classList.remove("hidden");
 
-      // Simulate short delay
       setTimeout(() => {
-        const signupData = {
+        const data = {
           firstName: document.getElementById("firstName").value.trim(),
           middleName: document.getElementById("middleName").value.trim(),
           lastName: document.getElementById("lastName").value.trim(),
@@ -120,13 +118,13 @@
           altPhone: document.getElementById("altPhone").value.trim()
         };
 
-        localStorage.setItem("signupData", JSON.stringify(signupData));
+        // Save in localStorage
+        localStorage.setItem("signupData", JSON.stringify(data));
 
-        // Hide loader and redirect
+        // Proceed to next page
         window.location.href = "otherdetails.html";
-      }, 1000); // 1-second loading delay
+      }, 1000);
     }
   </script>
-
 </body>
 </html>
