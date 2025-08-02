@@ -20,104 +20,90 @@
   <p class="text-lg font-medium text-gray-700 mt-4">Processing...</p>
 </div>
 
+<!-- Submit Processing Loader -->
+<div id="submitLoader" class="hidden fixed inset-0 bg-white bg-opacity-90 flex flex-col items-center justify-center z-50">
+  <img src="zashlogo.jpeg" alt="Zash Loan" class="w-14 h-14 mb-3">
+  <p class="text-lg font-semibold text-red-600">Submitting your request...</p>
+  <div class="mt-4 w-48 bg-gray-200 h-2 rounded-full">
+    <div class="bg-red-600 h-2 rounded-full animate-pulse w-full"></div>
+  </div>
+</div>
 
-  <!-- Submit Processing Loader (after clicking Continue) -->
-  <div id="submitLoader" class="hidden fixed inset-0 bg-white bg-opacity-90 flex flex-col items-center justify-center z-50">
-    <img src="zashlogo.jpeg" alt="Zash Loan" class="w-14 h-14 mb-3">
-    <p class="text-lg font-semibold text-red-600">Submitting your request...</p>
-    <div class="mt-4 w-48 bg-gray-200 h-2 rounded-full">
-      <div class="bg-red-600 h-2 rounded-full animate-pulse w-full"></div>
-    </div>
+<!-- Main Loan Page -->
+<div id="mainContent" class="hidden">
+  <!-- Header -->
+  <div class="flex items-center justify-between p-4 shadow-md bg-red-600 text-white">
+    <img src="zashlogo.jpeg" alt="Zash Loan" class="w-10 h-10">
+    <h1 class="text-lg font-semibold">Loan Application</h1>
   </div>
 
-  <!-- Main Loan Page -->
-  <div id="mainContent" class="hidden">
+  <!-- Loan Limit Section -->
+  <div class="p-6 max-w-lg mx-auto">
+    <h2 class="text-lg font-semibold mb-2">Select Loan Amount</h2>
+    <input type="range" id="loanSlider" min="1500" max="15000" step="500" class="w-full accent-red-600">
+    <p class="text-sm text-gray-600 mt-1">Loan Amount: <span id="loanAmount" class="font-bold text-red-600">KSH 1500</span></p>
 
-    <!-- Header -->
-    <div class="flex items-center justify-between p-4 shadow-md bg-red-600 text-white">
-      <img src="zashlogo.jpeg" alt="Zash Loan" class="w-10 h-10">
-      <h1 class="text-lg font-semibold">Loan Application</h1>
+    <!-- Promo Code -->
+    <div class="mt-4">
+      <label class="block font-medium">Promo Code</label>
+      <div class="flex">
+        <input type="text" id="promoCode" placeholder="Enter code" class="w-full border border-gray-300 px-3 py-2 rounded-l focus:outline-none">
+        <button onclick="applyPromo()" class="bg-red-600 text-white px-4 rounded-r hover:bg-red-700">Apply</button>
+      </div>
+      <p id="promoMsg" class="text-sm text-green-600 mt-1 hidden">Promo applied!</p>
     </div>
 
-    <!-- Loan Limit Section -->
-    <div class="p-6 max-w-lg mx-auto">
-      <h2 class="text-lg font-semibold mb-2">Select Loan Amount</h2>
-      <input type="range" id="loanSlider" min="1500" max="15000" step="500"
-        class="w-full accent-red-600">
-      <p class="text-sm text-gray-600 mt-1">Loan Amount: <span id="loanAmount" class="font-bold text-red-600">KSH 1500</span></p>
-
-      <!-- Promo Code -->
-      <div class="mt-4">
-        <label class="block font-medium">Promo Code</label>
-        <div class="flex">
-          <input type="text" id="promoCode" placeholder="Enter code"
-            class="w-full border border-gray-300 px-3 py-2 rounded-l focus:outline-none">
-          <button onclick="applyPromo()"
-            class="bg-red-600 text-white px-4 rounded-r hover:bg-red-700">Apply</button>
-        </div>
-        <p id="promoMsg" class="text-sm text-green-600 mt-1 hidden">Promo applied!</p>
-      </div>
-
-      <!-- M-Pesa Phone Number -->
-      <div class="mt-4">
-        <label class="block font-medium">Transfer to M-Pesa</label>
-        <input type="tel" id="mpesaNumber" placeholder="07XXXXXXXX"
-          class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none">
-      </div>
-
-      <!-- Loan Duration -->
-      <div class="mt-4">
-        <label class="block font-medium">Loan Duration (Days)</label>
-        <input type="range" id="daysSlider" min="5" max="15" step="1"
-          class="w-full accent-red-600">
-        <p class="text-sm mt-1">Due in <span id="loanDays" class="font-semibold text-red-600">5</span> days</p>
-      </div>
-
-      <!-- Loan Summary -->
-      <div class="mt-6 border-t pt-4">
-        <h3 class="text-md font-semibold mb-2">Loan Summary</h3>
-        <div class="grid grid-cols-2 gap-2 text-sm">
-          <div>Loan Amount:</div><div id="summaryAmount">KSH 1500</div>
-          <div>Interest (10%):</div><div id="interest">KSH 150</div>
-          <div>Service Fee (6.2%):</div><div id="serviceFee">KSH 93</div>
-          <div class="font-bold">Total Owed:</div><div id="totalOwed" class="font-bold">KSH 1743</div>
-        </div>
-      </div>
-
-      <!-- Continue Button -->
-      <button onclick="submitLoan()"
-        class="mt-6 w-full bg-red-600 text-white py-2 rounded hover:bg-red-700">
-        Continue
-      </button>
+    <!-- M-Pesa Phone Number -->
+    <div class="mt-4">
+      <label class="block font-medium">Transfer to M-Pesa</label>
+      <input type="tel" id="mpesaNumber" placeholder="07XXXXXXXX" class="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none">
     </div>
 
-    <!-- Footer -->
-    <footer class="mt-10 py-4 bg-red-600 text-white text-center text-sm">
-      © 2025 Zash Loan. All rights reserved.
-    </footer>
+    <!-- Loan Duration -->
+    <div class="mt-4">
+      <label class="block font-medium">Loan Duration (Days)</label>
+      <input type="range" id="daysSlider" min="5" max="15" step="1" class="w-full accent-red-600">
+      <p class="text-sm mt-1">Due in <span id="loanDays" class="font-semibold text-red-600">5</span> days</p>
+    </div>
+
+    <!-- Loan Summary -->
+    <div class="mt-6 border-t pt-4">
+      <h3 class="text-md font-semibold mb-2">Loan Summary</h3>
+      <div class="grid grid-cols-2 gap-2 text-sm">
+        <div>Loan Amount:</div><div id="summaryAmount">KSH 1500</div>
+        <div>Interest (10%):</div><div id="interest">KSH 150</div>
+        <div>Service Fee (6.2%):</div><div id="serviceFee">KSH 93</div>
+        <div class="font-bold">Total Owed:</div><div id="totalOwed" class="font-bold">KSH 1743</div>
+      </div>
+    </div>
+
+    <!-- Continue Button -->
+    <button onclick="submitLoan()" class="mt-6 w-full bg-red-600 text-white py-2 rounded hover:bg-red-700">
+      Continue
+    </button>
   </div>
+
+  <!-- Footer -->
+  <footer class="mt-10 py-4 bg-red-600 text-white text-center text-sm">
+    © 2025 Zash Loan. All rights reserved.
+  </footer>
+</div>
 
 <script>
   const loader = document.getElementById('loaderScreen');
   const mainContent = document.getElementById('mainContent');
-  const progressBar = document.getElementById('progressBar');
   const submitLoader = document.getElementById('submitLoader');
 
-  // Random loan limit
   const randomLoanLimit = Math.floor(Math.random() * ((15000 - 1500) / 500 + 1)) * 500 + 1500;
   localStorage.setItem('randomLoanLimit', randomLoanLimit);
 
- setTimeout(() => {
-  loader.classList.add('hidden');
-  mainContent.classList.remove('hidden');
+  setTimeout(() => {
+    loader.classList.add('hidden');
+    mainContent.classList.remove('hidden');
+    slider.value = randomLoanLimit;
+    updateLoanDetails(randomLoanLimit);
+  }, 3000);
 
-  // Set slider and loan value based on random loan limit
-  slider.value = randomLoanLimit;
-  updateLoanDetails(randomLoanLimit);
-}, 3000); // Show the spinner for 3 seconds
-
-
-  // Elements
   const slider = document.getElementById('loanSlider');
   const daysSlider = document.getElementById('daysSlider');
   const loanAmountText = document.getElementById('loanAmount');
@@ -143,17 +129,20 @@
 
   function applyPromo() {
     const promo = document.getElementById('promoCode').value.trim();
+    const loan = parseInt(slider.value);
+    const interest = Math.floor(loan * 0.10);
+    const serviceFee = Math.floor(loan * 0.062);
+    let total = loan + interest + serviceFee;
+
     if (promo.toLowerCase() === 'zash2024') {
       promoMsg.classList.remove('hidden');
       promoMsg.textContent = "Promo applied! You got 100 off.";
-      const loan = parseInt(slider.value);
-      const interest = Math.floor(loan * 0.10);
-      const serviceFee = Math.floor(loan * 0.062);
-      const total = loan + interest + serviceFee - 100;
-
-      totalOwedEl.textContent = `KSH ${total}`;
+      total -= 100;
       localStorage.setItem('promoCode', promo);
     }
+
+    totalOwedEl.textContent = `KSH ${total}`;
+    localStorage.setItem('serviceFee', serviceFee); // Ensures it's stored even if promo is applied
   }
 
   function submitLoan() {
@@ -175,7 +164,6 @@
 
     submitLoader.classList.remove('hidden');
 
-    // Simulate loading
     setTimeout(() => {
       window.location.href = 'verification.html';
     }, 2500);
