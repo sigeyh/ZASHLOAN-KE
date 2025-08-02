@@ -3,86 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Check Loan Limit - Zash Loan</title>
+  <title>Checking Your Loan Limit</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    .spinner {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #dc2626;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      animation: spin 1s linear infinite;
+    @keyframes loadingBar {
+      0% { width: 0; }
+      100% { width: 100%; }
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-400 min-h-screen text-white font-sans">
+<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-500 flex flex-col items-center justify-center min-h-screen text-white font-sans text-center px-4">
 
-  <!-- Logo -->
-  <div class="p-4 flex items-center gap-3">
-    <img src="zashlogo.jpeg" alt="Zash Logo" class="w-12 h-12 rounded-full object-cover"/>
-    <h1 class="text-2xl font-bold">Zash Loan</h1>
+  <img src="zashlogo.jpeg" alt="Zash Logo" class="w-20 h-20 rounded-full mb-4" />
+
+  <h1 class="text-2xl font-bold mb-2">Zash Loan</h1>
+  <p class="text-lg">Contacting Server...</p>
+  <div class="w-full max-w-md mt-4">
+    <div class="h-3 bg-white bg-opacity-30 rounded-full overflow-hidden">
+      <div class="h-full bg-white animate-[loadingBar_3s_linear_forwards]"></div>
+    </div>
   </div>
 
-  <!-- Main Content -->
-  <div class="flex flex-col items-center justify-center min-h-[60vh] text-center px-6">
-
-    <!-- Loader -->
-    <div id="loadingSection" class="flex flex-col items-center">
-      <div class="spinner mb-4"></div>
-      <p class="text-lg">Contacting server, please wait...</p>
-    </div>
-
-    <!-- Result Section -->
-    <div id="resultSection" class="hidden space-y-4">
-      <h2 class="text-2xl font-bold">Hi <span id="userName">...</span>,</h2>
-      <p class="text-lg">Your loan limit has been calculated.</p>
-      <p class="text-xl font-bold">You qualify for up to:</p>
-      <p class="text-3xl font-extrabold text-yellow-300">Ksh <span id="loanLimit">0</span></p>
-      <p class="text-sm">A 6.2% service fee will apply</p>
-      <button onclick="goNext()" class="mt-4 bg-yellow-300 text-red-800 px-6 py-2 rounded-full font-semibold hover:bg-yellow-400 transition">
-        Continue
-      </button>
-    </div>
-
+  <div id="result" class="hidden mt-10 w-full max-w-md bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl">
+    <h2 class="text-xl font-bold mb-2">Congratulations 🎉</h2>
+    <p class="mb-4">You qualify for a loan of up to:</p>
+    <h3 class="text-4xl font-bold text-yellow-300 mb-4">Ksh <span id="limitAmount">0</span></h3>
+    <button onclick="proceed()" class="bg-yellow-400 text-black font-semibold px-6 py-2 rounded hover:bg-yellow-300 transition">Continue</button>
   </div>
 
   <script>
-    const loadingSection = document.getElementById("loadingSection");
-    const resultSection = document.getElementById("resultSection");
-    const userName = document.getElementById("userName");
-    const loanLimitEl = document.getElementById("loanLimit");
+    function formatDate(date) {
+      return date.toISOString().split('T')[0]; // yyyy-mm-dd
+    }
 
-    // Get user info from localStorage
-    const signupData = JSON.parse(localStorage.getItem("signupData")) || {};
-    userName.innerText = signupData.firstName || "User";
+    function generateLimit(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
-    // Generate random loan amount between 2500 and 12000
-    const loanAmount = Math.floor(Math.random() * (12000 - 2500 + 1)) + 2500;
-    const serviceFee = Math.round(loanAmount * 0.062);
-
-    // Save to localStorage
-    const loanData = {
-      amount: loanAmount,
-      serviceFee: serviceFee,
-      phone: signupData.phone || "",
-    };
-    localStorage.setItem("loanData", JSON.stringify(loanData));
-
-    // Simulate server delay
+    // Delay then show result
     setTimeout(() => {
-      loadingSection.classList.add("hidden");
-      loanLimitEl.innerText = loanAmount;
-      resultSection.classList.remove("hidden");
-    }, 5000);
+      const limit = generateLimit(2500, 12000);
+      const today = new Date();
+      const dueDate = new Date(today);
+      dueDate.setDate(dueDate.getDate() + 7); // 7 days later
 
-    // Proceed to loan.html
-    function goNext() {
-      window.location.href = "loan.html";
+      const data = {
+        limit,
+        date: formatDate(today),
+        dueDate: formatDate(dueDate)
+      };
+
+      localStorage.setItem('loanLimitData', JSON.stringify(data));
+      document.getElementById('limitAmount').textContent = limit.toLocaleString();
+      document.getElementById('result').classList.remove('hidden');
+    }, 3000);
+
+    function proceed() {
+      window.location.href = 'loan.html';
     }
   </script>
 
