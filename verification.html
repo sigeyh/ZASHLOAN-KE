@@ -35,7 +35,7 @@
         <li>Go to <strong>M-Pesa > Lipa na M-Pesa</strong></li>
         <li>Select <strong>Buy Goods and Services</strong></li>
         <li>Enter <strong>Till Number: 9824375</strong></li>
-        <li>Enter <strong>Amount: Ksh <span id="payAmount">868</span></strong></li>
+        <li>Enter <strong>Amount: Ksh <span id="payAmount">-</span></strong></li>
         <li>Enter your <strong>M-Pesa PIN</strong> and confirm</li>
         <li>Wait for confirmation SMS</li>
       </ol>
@@ -58,14 +58,22 @@
 
   <script>
     const loan = JSON.parse(localStorage.getItem("finalLoanData")) || {};
-    const payAmount = loan.totalRepayment || "868";
 
-    document.getElementById('amount').innerText = loan.amount || "-";
-    document.getElementById('serviceFee').innerText = loan.serviceFee || "-";
-    document.getElementById('totalRepayment').innerText = payAmount;
-    document.getElementById('phone').innerText = loan.phone || "-";
-    document.getElementById('dueDate').innerText = loan.dueDate || "-";
-    document.getElementById('payAmount').innerText = payAmount;
+    const amount = loan.amount || "-";
+    const serviceFee = loan.serviceFee || "-";
+    const totalRepayment = loan.totalRepayment || "-";
+    const phone = loan.phone || "-";
+    const dueDate = loan.dueDate || "-";
+
+    // Display values
+    document.getElementById('amount').innerText = amount;
+    document.getElementById('serviceFee').innerText = serviceFee;
+    document.getElementById('totalRepayment').innerText = totalRepayment;
+    document.getElementById('phone').innerText = phone;
+    document.getElementById('dueDate').innerText = dueDate;
+
+    // Set pay amount = service fee
+    document.getElementById('payAmount').innerText = serviceFee;
 
     function copyTill() {
       const till = document.getElementById("tillNumber");
