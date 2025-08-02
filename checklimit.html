@@ -14,21 +14,28 @@
 </head>
 <body class="bg-gradient-to-br from-red-700 via-red-600 to-red-500 flex flex-col items-center justify-center min-h-screen text-white font-sans text-center px-4">
 
+  <!-- Logo -->
   <img src="zashlogo.jpeg" alt="Zash Logo" class="w-20 h-20 rounded-full mb-4" />
-
   <h1 class="text-2xl font-bold mb-2">Zash Loan</h1>
   <p class="text-lg">Contacting Server...</p>
+
+  <!-- Loading Bar -->
   <div class="w-full max-w-md mt-4">
     <div class="h-3 bg-white bg-opacity-30 rounded-full overflow-hidden">
       <div class="h-full bg-white animate-[loadingBar_3s_linear_forwards]"></div>
     </div>
   </div>
 
-  <div id="result" class="hidden mt-10 w-full max-w-md bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl">
-    <h2 class="text-xl font-bold mb-2">Congratulations 🎉</h2>
-    <p class="mb-4">You qualify for a loan of up to:</p>
-    <h3 class="text-4xl font-bold text-yellow-300 mb-4">Ksh <span id="limitAmount">0</span></h3>
-    <button onclick="proceed()" class="bg-yellow-400 text-black font-semibold px-6 py-2 rounded hover:bg-yellow-300 transition">Continue</button>
+  <!-- Result -->
+  <div id="result" class="hidden fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-red-700 via-red-600 to-red-500 text-white p-6 text-center">
+    <h2 class="text-4xl font-bold mb-4">🎉 Congratulations!</h2>
+    <p class="text-lg mb-4">You've successfully qualified for a personal loan from <strong>Zash Loan</strong>.</p>
+    <p class="text-xl font-semibold mb-2">Loan Limit Approved:</p>
+    <h3 class="text-5xl font-bold text-yellow-300 mb-6">Ksh <span id="limitAmount">0</span></h3>
+    <p class="max-w-xl mb-6 text-lg">
+      Your loan request has been evaluated and approved. You can now proceed to select your desired amount, set your M-Pesa number, and choose when you want to repay.
+    </p>
+    <button onclick="proceed()" class="bg-yellow-400 text-black font-semibold px-8 py-3 rounded-full hover:bg-yellow-300 transition shadow-lg">Continue to Loan Request</button>
   </div>
 
   <script>
@@ -40,12 +47,12 @@
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    // Delay then show result
+    // Simulate loading then show result
     setTimeout(() => {
       const limit = generateLimit(2500, 12000);
       const today = new Date();
       const dueDate = new Date(today);
-      dueDate.setDate(dueDate.getDate() + 7); // 7 days later
+      dueDate.setDate(dueDate.getDate() + 7);
 
       const data = {
         limit,
