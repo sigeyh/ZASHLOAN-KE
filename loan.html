@@ -14,10 +14,10 @@
     <h1 class="text-2xl font-bold">Zash Loan</h1>
   </div>
 
-  <!-- Main Content -->
-  <div class="max-w-md mx-auto mt-6 bg-white bg-opacity-10 backdrop-blur-md rounded-xl p-6 space-y-4">
+  <!-- Loan Application Form -->
+  <div class="max-w-md mx-auto mt-6 bg-white bg-opacity-10 backdrop-blur-md rounded-xl p-6 space-y-4 shadow-lg">
 
-    <h2 class="text-xl font-semibold text-center">Loan Application</h2>
+    <h2 class="text-xl font-semibold text-center">Apply for a Loan</h2>
 
     <div>
       <label class="block mb-1">Loan Amount (Ksh)</label>
@@ -62,13 +62,14 @@
     const totalRepaymentEl = document.getElementById('totalRepayment');
     const maxLimitEl = document.getElementById('maxLimit');
 
-    // Load data from checklimit.html
+    // Load loan limit from checklimit.html
     const loanData = JSON.parse(localStorage.getItem("loanData")) || {};
     const maxLoan = loanData.amount || 3500;
 
     loanSlider.max = maxLoan;
     maxLimitEl.innerText = `Max: ${maxLoan}`;
 
+    // Update UI on slider input
     const updateDisplay = () => {
       const amount = parseInt(loanSlider.value);
       const fee = Math.round(amount * 0.062);
@@ -80,7 +81,7 @@
     };
 
     loanSlider.addEventListener('input', updateDisplay);
-    updateDisplay();
+    updateDisplay(); // initial call
 
     function submitLoan() {
       const phone = document.getElementById('phone').value;
@@ -90,7 +91,7 @@
       const total = amount + fee;
 
       if (!phone || !dueDate) {
-        alert("Please enter phone number and select a due date.");
+        alert("Please enter your phone number and due date.");
         return;
       }
 
