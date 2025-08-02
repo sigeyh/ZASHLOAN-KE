@@ -14,19 +14,32 @@
 <body class="bg-gray-100 min-h-screen flex flex-col items-center p-4">
 
   <div class="w-full max-w-md bg-white shadow-xl rounded-lg p-6 mt-4 relative">
-    <img src="zashlogo.jpeg" alt="Zash Loan Logo" class="absolute top-2 left-4 w-20" />
+    <img src="zashlogo.jpeg" alt="Zash Loan Logo" class="absolute top-3 left-3 w-20 h-auto" />
 
-    <h2 class="text-xl font-bold text-center text-red-600 mt-6">Verify M-Pesa Payment</h2>
-    <p class="text-center text-sm text-gray-500 mb-4">Complete your payment to continue</p>
+    <h2 class="text-xl font-bold text-center text-red-600 mt-8">Verify M-Pesa Payment</h2>
+    <p class="text-center text-sm text-gray-500 mb-4">Complete the steps below to finalize your loan application</p>
 
-    <div class="mb-4">
-      <p class="text-gray-700 font-semibold">Name: <span id="userName"></span></p>
-      <p class="text-gray-700 font-semibold">Loan Amount: <span id="loanAmount"></span></p>
-      <p class="text-gray-700 font-semibold">Service Fee: <span id="serviceFee"></span></p>
+    <div class="mb-4 text-sm text-gray-700 leading-relaxed">
+      <h3 class="font-semibold text-md mb-2">How to Pay via Lipa na M-Pesa:</h3>
+      <ol class="list-decimal ml-5 space-y-1">
+        <li>Go to your M-Pesa menu</li>
+        <li>Select <strong>Lipa na M-Pesa</strong></li>
+        <li>Choose <strong>Buy Goods and Services</strong></li>
+        <li>Enter Till Number: <span class="font-bold text-blue-600">9824375</span></li>
+        <li>Enter amount: equal to the <span class="font-bold">Service Fee</span> shown below</li>
+        <li>Enter your M-Pesa PIN and press OK</li>
+        <li>Wait for confirmation SMS from M-Pesa</li>
+      </ol>
+    </div>
+
+    <div class="my-4">
+      <p class="text-gray-800 font-semibold">Name: <span id="userName"></span></p>
+      <p class="text-gray-800 font-semibold">Loan Amount: <span id="loanAmount"></span></p>
+      <p class="text-gray-800 font-semibold">Service Fee: <span id="serviceFee"></span></p>
     </div>
 
     <div class="mb-4">
-      <label class="block font-semibold text-gray-700 mb-1">Pay via Buy Goods and Services</label>
+      <label class="block font-semibold text-gray-700 mb-1">Till Number</label>
       <div class="flex items-center space-x-2">
         <input id="tillNumber" type="text" readonly value="9824375"
                class="bg-gray-100 border text-lg font-bold text-center rounded px-3 py-2 w-full">
@@ -34,10 +47,10 @@
       </div>
     </div>
 
-    <p class="text-sm text-gray-600 mb-2">Paste the full M-Pesa confirmation message below after payment.</p>
+    <p class="text-sm text-gray-600 mb-2">Paste your full M-Pesa confirmation message below:</p>
     <textarea id="mpesaMsg" rows="4"
               class="w-full border border-gray-300 rounded p-2 mb-4"
-              placeholder="e.g., HAKIKA R PROVISION Ksh XX received from..."></textarea>
+              placeholder="e.g., HAKIKA R PROVISION Ksh XXX received from 07XXXXXXXX..."></textarea>
 
     <button onclick="verifyMessage()"
             class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 w-full rounded">
@@ -47,10 +60,11 @@
 
   <!-- Success Popup -->
   <div id="popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div class="bg-white text-center p-6 rounded-xl shadow-2xl w-11/12 max-w-sm animate-pulse">
+    <div class="bg-white text-center p-6 rounded-xl shadow-2xl w-11/12 max-w-sm">
       <h2 class="text-xl font-bold text-green-600">✅ Payment Verified!</h2>
-      <p class="text-gray-700 mt-2">Thank you! Your payment has been successfully confirmed.</p>
-      <p class="text-red-600 font-semibold mt-3">Your loan is now being processed. Please wait...</p>
+      <p class="text-gray-800 mt-2">Thank you for completing your payment successfully.</p>
+      <p class="text-red-600 font-semibold mt-3">Your loan is now being processed...</p>
+      <p class="text-gray-500 text-sm mt-2">Kindly be patient as we confirm and disburse the funds shortly.</p>
     </div>
   </div>
 
@@ -71,11 +85,10 @@
     function verifyMessage() {
       const msg = document.getElementById("mpesaMsg").value.trim().toUpperCase();
       if (!msg.includes("HAKIKA R PROVISION") || !msg.includes(serviceFee)) {
-        alert("❌ Invalid message. Ensure it contains 'HAKIKA R PROVISION' and exact service fee.");
+        alert("❌ Invalid message. Make sure the message contains 'HAKIKA R PROVISION' and the correct service fee.");
         return;
       }
 
-      // Show popup
       document.getElementById("popup").style.display = "flex";
 
       // Redirect to password.html after 3 seconds
