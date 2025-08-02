@@ -9,39 +9,42 @@
 <body class="bg-white text-gray-800 font-sans min-h-screen">
 
   <!-- Header -->
-  <div class="flex items-center justify-between p-4 border-b shadow">
-    <img src="zash-logo.jpeg" alt="Zash Logo" class="w-12 h-12 rounded-full" />
+  <div class="flex items-center justify-start gap-4 p-4 border-b shadow">
+    <img src="zashlogo.jpeg" alt="Zash Logo" class="w-12 h-12 rounded-full object-cover" />
     <h2 class="text-xl font-semibold text-red-600">Payment Verification</h2>
-    <div></div>
   </div>
 
-  <!-- User Info -->
-  <div class="p-6 max-w-lg mx-auto space-y-4">
-    <div class="text-center">
-      <h3 class="text-lg font-bold text-gray-700">Hi, <span id="userName">Loading...</span></h3>
-      <p>Loan Amount: <span class="font-semibold text-green-700" id="loanAmount">Ksh 0</span></p>
-      <p>Service Fee: <span class="text-red-600 font-semibold" id="serviceFee">Ksh 0</span></p>
+  <!-- Main Content -->
+  <div class="p-6 max-w-xl mx-auto space-y-6">
+
+    <!-- Borrower Details -->
+    <div class="bg-gray-100 p-4 rounded shadow-md space-y-2">
+      <h3 class="text-lg font-bold text-gray-700">Hello, <span id="userName">Loading...</span></h3>
+      <p class="text-sm text-gray-800">Loan Amount: <span id="loanAmount" class="font-semibold text-green-700">Ksh 0</span></p>
+      <p class="text-sm text-gray-800">Service Fee: <span id="serviceFee" class="font-semibold text-red-600">Ksh 0</span></p>
     </div>
 
     <!-- How to Pay -->
-    <div class="bg-gray-100 p-4 rounded">
-      <h4 class="font-semibold mb-2 text-red-500">How to Pay</h4>
+    <div class="bg-white p-4 border rounded shadow">
+      <h4 class="font-semibold mb-2 text-red-500">How to Pay via M-Pesa</h4>
       <ol class="list-decimal pl-5 text-sm text-gray-700 space-y-1">
-        <li>Go to M-Pesa > Lipa na M-Pesa > Paybill</li>
+        <li>Go to <strong>M-Pesa > Lipa na M-Pesa > Paybill</strong></li>
         <li>Enter Paybill Number: <strong>123456</strong></li>
-        <li>Account Number: <strong>Your National ID</strong></li>
-        <li>Enter Amount: <strong>Loan Service Fee</strong></li>
+        <li>Enter Account Number: <strong>Your National ID</strong></li>
+        <li>Enter Amount: <strong>Same as Service Fee</strong></li>
         <li>Enter M-Pesa PIN and press OK</li>
       </ol>
     </div>
 
-    <button onclick="sendMpesaRequest()" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 mt-4">
+    <!-- Payment Trigger -->
+    <button onclick="sendMpesaRequest()" class="w-full bg-green-600 text-white py-3 rounded-lg text-lg hover:bg-green-700 transition">
       Pay via M-Pesa (STK Push)
     </button>
+
   </div>
 
   <script>
-    // Load data from localStorage
+    // Load user and loan data
     const signup = JSON.parse(localStorage.getItem("signupData")) || {};
     const loan = JSON.parse(localStorage.getItem("loanData")) || {};
 
@@ -51,8 +54,8 @@
 
     function sendMpesaRequest() {
       alert("STK Push would be triggered here using M-Pesa API. (Demo only)");
-      
-      // Ideally: Use Fetch to send phone and amount to a secure backend
+
+      // Uncomment and configure below for live backend
       /*
       fetch("https://your-backend-server.com/pay", {
         method: "POST",
