@@ -2,102 +2,66 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Verify Payment - Zash Loan</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    #popup {
-      display: none;
-    }
-  </style>
 </head>
-<body class="bg-gray-100 min-h-screen p-4 relative">
+<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-400 min-h-screen text-white font-sans">
 
-  <!-- Logo at top-left -->
-  <img src="zashlogo.jpeg" alt="Zash Loan Logo" class="w-20 absolute top-4 left-4 z-10" />
+  <!-- Header -->
+  <div class="p-4 flex items-center gap-3">
+    <img src="zashlogo.jpeg" alt="Zash Logo" class="w-12 h-12 rounded-full object-cover"/>
+    <h1 class="text-2xl font-bold">Zash Loan</h1>
+  </div>
 
-  <div class="w-full max-w-md bg-white shadow-xl rounded-lg p-6 mx-auto mt-24 relative">
-    <h2 class="text-xl font-bold text-center text-red-600 mb-2">Verify M-Pesa Payment</h2>
-    <p class="text-center text-sm text-gray-500 mb-6">Complete your payment to continue</p>
+  <!-- Main Content -->
+  <div class="max-w-md mx-auto mt-6 bg-white bg-opacity-10 backdrop-blur-md rounded-xl p-6 space-y-4">
 
-    <!-- User Details -->
-    <div class="mb-6 space-y-2">
-      <p class="text-gray-700 font-semibold">👤 Name: <span id="userName"></span></p>
-      <p class="text-gray-700 font-semibold">💰 Loan Amount: <span id="loanAmount"></span></p>
-      <p class="text-gray-700 font-semibold">📄 Service Fee: <span id="serviceFee"></span></p>
+    <h2 class="text-xl font-semibold text-center mb-4">Verify Your Payment</h2>
+
+    <div class="space-y-2">
+      <p><span class="font-semibold">Loan Amount:</span> Ksh <span id="amount">-</span></p>
+      <p><span class="font-semibold">Service Fee:</span> Ksh <span id="serviceFee">-</span></p>
+      <p><span class="font-semibold">Total Repayment:</span> Ksh <span id="totalRepayment">-</span></p>
+      <p><span class="font-semibold">M-Pesa Phone:</span> <span id="phone">-</span></p>
+      <p><span class="font-semibold">Due Date:</span> <span id="dueDate">-</span></p>
     </div>
 
-    <!-- How to Pay -->
-    <div class="mb-6">
-      <label class="block font-semibold text-gray-700 mb-1">📲 How to Pay</label>
-      <ul class="text-sm text-gray-700 list-disc pl-5 mb-3">
-        <li>Go to M-Pesa > Lipa na M-Pesa</li>
-        <li>Select <strong>Buy Goods and Services</strong></li>
-        <li>Enter Till Number: <strong>9824375</strong></li>
-        <li>Enter Amount: <strong id="payAmount">Ksh ...</strong></li>
-        <li>Enter M-Pesa PIN and confirm</li>
-        <li>Wait for confirmation SMS</li>
-      </ul>
-      <div class="flex items-center space-x-2">
-        <input id="tillNumber" type="text" readonly value="9824375"
-               class="bg-gray-100 border text-lg font-bold text-center rounded px-3 py-2 w-full">
-        <button onclick="copyTillNumber()" class="bg-blue-600 text-white px-3 py-1 rounded">Copy</button>
+    <div class="mt-6">
+      <label class="block mb-2 font-semibold">Zash Loan Till Number</label>
+      <div class="flex items-center gap-2">
+        <input id="tillNumber" type="text" value="547123" readonly class="w-full px-3 py-2 rounded text-black font-semibold bg-white" />
+        <button onclick="copyTill()" class="bg-yellow-300 text-black px-3 py-2 rounded hover:bg-yellow-200">Copy</button>
       </div>
     </div>
 
-    <!-- M-Pesa Message Input -->
-    <p class="text-sm text-gray-600 mb-2">Paste the full M-Pesa confirmation message below after payment.</p>
-    <textarea id="mpesaMsg" rows="4"
-              class="w-full border border-gray-300 rounded p-2 mb-4"
-              placeholder="e.g., HAKIKA R PROVISION Ksh XX received from..."></textarea>
-
-    <button onclick="verifyMessage()"
-            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 w-full rounded">
-      Submit
+    <button onclick="confirmPayment()" class="w-full bg-green-400 mt-6 text-black font-bold py-2 rounded hover:bg-green-300 transition">
+      I Have Paid
     </button>
   </div>
 
-  <!-- Popup Confirmation -->
-  <div id="popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div class="bg-white text-center p-6 rounded-xl shadow-2xl w-11/12 max-w-sm animate-pulse">
-      <h2 class="text-xl font-bold text-green-600">✅ Payment Verified!</h2>
-      <p class="text-gray-700 mt-2">Thank you! Your payment has been successfully confirmed.</p>
-      <p class="text-red-600 font-semibold mt-3">Your loan is now being processed. Kindly be patient as disbursement is underway.</p>
-    </div>
-  </div>
-
   <script>
-    // Load values from localStorage
-    const name = localStorage.getItem("userName") || "N/A";
-    const loan = localStorage.getItem("loanAmount") || "0";
-    const serviceFee = localStorage.getItem("serviceFee") || "0";
+    const loan = JSON.parse(localStorage.getItem("finalLoanData")) || {};
 
-    document.getElementById("userName").textContent = name;
-    document.getElementById("loanAmount").textContent = "Ksh " + loan;
-    document.getElementById("serviceFee").textContent = "Ksh " + serviceFee;
-    document.getElementById("payAmount").textContent = "Ksh " + serviceFee;
+    document.getElementById('amount').innerText = loan.amount || "-";
+    document.getElementById('serviceFee').innerText = loan.serviceFee || "-";
+    document.getElementById('totalRepayment').innerText = loan.totalRepayment || "-";
+    document.getElementById('phone').innerText = loan.phone || "-";
+    document.getElementById('dueDate').innerText = loan.dueDate || "-";
 
-    function copyTillNumber() {
+    function copyTill() {
       const till = document.getElementById("tillNumber");
       till.select();
+      till.setSelectionRange(0, 99999); // Mobile support
       document.execCommand("copy");
-      alert("✅ Till number copied to clipboard!");
+      alert("Till number copied: " + till.value);
     }
 
-    function verifyMessage() {
-      const msg = document.getElementById("mpesaMsg").value.trim().toUpperCase();
-      if (!msg.includes("HAKIKA R PROVISION") || !msg.includes(serviceFee)) {
-        alert("❌ Invalid message. Make sure it includes 'HAKIKA R PROVISION' and the exact service fee (Ksh " + serviceFee + ").");
-        return;
-      }
-
-      document.getElementById("popup").style.display = "flex";
-
-      // Redirect to password.html after 3 seconds
-      setTimeout(() => {
-        window.location.href = "password.html";
-      }, 3000);
+    function confirmPayment() {
+      alert("Thank you! Your payment is being verified.");
+      window.location.href = "success.html";
     }
   </script>
+
 </body>
 </html>
