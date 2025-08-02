@@ -3,91 +3,71 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Verify Loan Payment - Zash Loan</title>
+  <title>Payment Verification - Zash Loan</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-500 min-h-screen text-white font-sans">
+<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-500 text-white min-h-screen px-4 py-6 font-sans">
 
   <!-- Header -->
-  <div class="p-4 flex items-center gap-3">
-    <img src="zashlogo.jpeg" alt="Zash Logo" class="w-12 h-12 rounded-full object-cover"/>
+  <div class="flex items-center gap-3 mb-6">
+    <img src="zashlogo.jpeg" alt="Zash Logo" class="w-12 h-12 rounded-full">
     <h1 class="text-2xl font-bold">Zash Loan</h1>
   </div>
 
-  <!-- Content -->
-  <div class="max-w-md mx-auto mt-6 bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 space-y-6">
-
-    <h2 class="text-xl font-semibold text-center">Confirm Your Payment</h2>
-
-    <!-- Loan Details -->
-    <div class="space-y-2 text-sm leading-relaxed">
-      <p><strong>Loan Amount:</strong> Ksh <span id="loanAmount">-</span></p>
-      <p><strong>Service Fee:</strong> Ksh <span id="serviceFee">-</span></p>
-      <p><strong>Total Repayment:</strong> Ksh <span id="totalRepayment">-</span></p>
-      <p><strong>M-Pesa Number:</strong> <span id="phone">-</span></p>
-      <p><strong>Due Date:</strong> <span id="dueDate">-</span></p>
-    </div>
-
-    <!-- How to Pay -->
-    <div class="bg-white bg-opacity-5 rounded p-4 text-sm space-y-1 border border-white border-opacity-20">
-      <h3 class="font-bold text-lg">📲 How to Pay</h3>
-      <p>1. Go to M-Pesa > Lipa na M-Pesa</p>
-      <p>2. Select Buy Goods and Services</p>
-      <p>3. Enter Till Number: <strong>9824375</strong></p>
-      <p>4. Enter Amount: <strong>Ksh <span id="serviceFeeOnly">-</span></strong></p>
-      <p>5. Enter M-Pesa PIN and confirm</p>
-      <p>6. Wait for confirmation SMS</p>
-
-      <div class="flex justify-between items-center mt-3">
-        <span class="font-bold text-lg">Hakika Till: <span id="till">9824375</span></span>
-        <button onclick="copyTill()" class="bg-yellow-400 text-black text-sm px-3 py-1 rounded hover:bg-yellow-300">Copy</button>
-      </div>
-    </div>
-
-    <!-- Payment Confirmation -->
-    <div class="mt-4">
-      <label for="mpesaMessage" class="text-sm block mb-2">Paste your full M-Pesa confirmation message:</label>
-      <textarea id="mpesaMessage" rows="3" placeholder="e.g., HAKIKA R PROVISION Ksh XX received from..." class="w-full p-2 rounded text-black"></textarea>
-    </div>
-
-    <button onclick="confirmPayment()" class="w-full bg-green-400 text-black font-bold py-2 rounded hover:bg-green-300 transition mt-4">
-      I Have Paid
-    </button>
-
+  <!-- Loan Summary -->
+  <div class="bg-white bg-opacity-10 p-4 rounded-xl mb-6">
+    <h2 class="text-xl font-semibold mb-2">Loan Summary</h2>
+    <p><strong>Full Name:</strong> <span id="fullName">-</span></p>
+    <p><strong>Loan Amount:</strong> Ksh <span id="amount">-</span></p>
+    <p><strong>Service Fee:</strong> Ksh <span id="fee">-</span></p>
+    <p><strong>Request Date:</strong> <span id="requestDate">-</span></p>
+    <p><strong>Due Date:</strong> <span id="dueDate">-</span></p>
+    <p><strong>M-Pesa Number:</strong> <span id="phone">-</span></p>
   </div>
 
-  <!-- JavaScript -->
+  <!-- How to Pay -->
+  <div class="bg-white bg-opacity-10 p-4 rounded-xl mb-6">
+    <h2 class="text-xl font-semibold mb-3">📲 How to Pay</h2>
+    <ol class="list-decimal pl-4 space-y-1">
+      <li>Go to M-Pesa > Lipa na M-Pesa</li>
+      <li>Select Buy Goods and Services</li>
+      <li>Enter Till Number: <strong class="text-yellow-300">9824375 (Hakika)</strong></li>
+      <li>Enter Amount: Ksh <strong id="payAmount" class="text-yellow-300">-</strong></li>
+      <li>Enter M-Pesa PIN and confirm</li>
+      <li>Wait for confirmation SMS</li>
+    </ol>
+  </div>
+
+  <!-- Confirmation Message -->
+  <div class="bg-white bg-opacity-10 p-4 rounded-xl mb-6">
+    <label for="mpesaMessage" class="block mb-2 font-medium">Paste your full M-Pesa confirmation message</label>
+    <textarea id="mpesaMessage" placeholder="e.g. HAKIKA R PROVISION Ksh XX received from..." class="w-full p-3 rounded text-black h-32" required></textarea>
+  </div>
+
+  <!-- Submit Button -->
+  <button onclick="submit()" class="w-full bg-yellow-400 text-black font-bold py-3 rounded-full hover:bg-yellow-300 shadow-lg">Submit</button>
+
   <script>
-    const data = JSON.parse(localStorage.getItem("finalLoanData")) || {};
+    const data = JSON.parse(localStorage.getItem('loanRequest')) || {};
 
-    function format(n) {
-      return n ? parseInt(n).toLocaleString() : "0";
-    }
+    document.getElementById('fullName').textContent = data.fullName || '-';
+    document.getElementById('amount').textContent = data.amount?.toLocaleString() || '-';
+    document.getElementById('fee').textContent = data.serviceFee?.toLocaleString() || '-';
+    document.getElementById('requestDate').textContent = data.requestDate || '-';
+    document.getElementById('dueDate').textContent = data.dueDate || '-';
+    document.getElementById('phone').textContent = data.phone || '-';
+    document.getElementById('payAmount').textContent = data.serviceFee?.toLocaleString() || '-';
 
-    document.getElementById("loanAmount").textContent = format(data.amount);
-    document.getElementById("serviceFee").textContent = format(data.serviceFee);
-    document.getElementById("totalRepayment").textContent = format(data.totalRepayment);
-    document.getElementById("serviceFeeOnly").textContent = format(data.serviceFee);
-    document.getElementById("phone").textContent = data.phone || "-";
-    document.getElementById("dueDate").textContent = data.dueDate || "-";
-
-    function copyTill() {
-      navigator.clipboard.writeText("9824375");
-      alert("Till number copied to clipboard!");
-    }
-
-    function confirmPayment() {
+    function submit() {
       const msg = document.getElementById("mpesaMessage").value.trim();
-      if (msg.length < 10) {
-        alert("Please paste a valid M-Pesa confirmation message.");
+      if (!msg) {
+        alert("Please paste the M-Pesa confirmation message.");
         return;
       }
-      alert("Payment is being verified...");
-      setTimeout(() => {
-        window.location.href = "success.html";
-      }, 3000);
+      // Optionally save or validate the message
+      localStorage.setItem('confirmationMessage', msg);
+      window.location.href = "success.html";
     }
   </script>
-
 </body>
 </html>
