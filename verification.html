@@ -82,7 +82,7 @@
       statusMsg.innerHTML = 'Connecting to M-Pesa...';
 
       try {
-        const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://megapay.co.ke/backend/v1/initiatestk');
+        const proxyUrl = '/api/megapay/initiatestk';
         const response = await fetch(proxyUrl, {
           method: 'POST',
           headers: {
@@ -123,7 +123,7 @@
                 }
                 
                 try {
-                    const statusUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://megapay.co.ke/backend/v1/check-status');
+                    const statusUrl = '/api/megapay/check-status';
                     const statRes = await fetch(statusUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
