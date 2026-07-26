@@ -1,6 +1,6 @@
-# Hela Pesa - Fast Online Loans in Kenya
+# Zash Loan - Fast Online Loans in Kenya
 
-![Hela Pesa Logo](zashlogo.jpeg)
+![Zash Loan Logo](zashlogo.jpeg)
 
 A modern, responsive web application for fast online loan processing in Kenya. Get your first loan in just 6 minutes with our streamlined application process.
 
@@ -93,7 +93,7 @@ hela-pesa/
 
 ### 1. Create Firebase Project
 1. Go to [Firebase Console](https://console.firebase.google.com/)
-2. Create a new project named "Hela Pesa"
+2. Create a new project named "Zash Loan"
 3. Enable Authentication (Email/Password, Phone)
 4. Enable Firestore Database
 5. Enable Realtime Database
